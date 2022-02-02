@@ -1,42 +1,33 @@
+import { CheckedLetter } from "./wordCheck";
 
-type LineProps = {
-    guess: string;
-    target: string;
+interface LineProps {
+    guess: CheckedLetter[];
+    length: number;
     showResults: boolean;
 }
 
 function Line(props: LineProps) {
 
-    const { guess, target } = props;
-    const unmatchedLetters = target.split("").filter((targetLetter, index) => (props.guess[index] !== targetLetter));
-    const letters = target.split("").map((targetLetter, index) => {
+    const { guess, length, showResults } = props;
 
-        var className = "Letter";
-        var guessLetter = "";
+    const letters = [...Array(length)].map((_, i) => {
 
-        // Determine class for letter based on its occurence in the target
-        if (index < props.guess.length) {
+        let className = "letter";
+        let guessLetter = "";
 
-            guessLetter = guess[index];
+        if (i < guess.length) {
+            guessLetter = guess[i].letter
 
-            if (props.showResults) {
-                if (guessLetter === targetLetter) {
-                    className += " correct";
-                }
-                else if (unmatchedLetters.includes(guessLetter) && (guess.slice(0, index + 1).match(new RegExp(guessLetter, "g")) || []).length <= (target.match(new RegExp(guessLetter, "g")) || []).length) {
-                    className += " valid";
-                }
-                else {
-                    className += " invalid";
-                }
+            if (showResults) {
+                className += " " + guess[i].result;
             }
         }
 
-        return <div className={className} key={index}>{guessLetter}</div>;
+        return <div className={className} key={i}>{guessLetter}</div>;
     });
 
     return (
-        <div className="Line">{letters}</div>
+        <div className="line">{letters}</div>
     );
 }
 

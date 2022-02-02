@@ -40,7 +40,13 @@ function Game(props: GameProps) {
     }
 
     const onKey = (key: string) => {
-        if (!inProgress) return;
+        if (!inProgress) {
+            if(key === "Enter") {
+                startNewGame();
+            }
+
+            return;
+        }
 
         if (/^[a-zA-Z]$/.test(key)) {
             if (currentGuess.length < props.wordLength) {
@@ -72,7 +78,7 @@ function Game(props: GameProps) {
             });
 
             if (newAnswers.every(answer => answer.solvedAt !== null)) {
-                setMessage(`Congratulations! You got ${answers.map(answer => answer.word.toUpperCase()).join(" and ")} in ${previousGuesses.length + 1} guesses`);
+                setMessage(`Congratulations, you got ${answers.map(answer => answer.word.toUpperCase()).join(" and ")} in ${previousGuesses.length + 1} guesses. Press enter to play again`);
                 setInProgress(false);
             }
             else if (previousGuesses.length + 1 >= props.guessLimit) {
@@ -109,7 +115,7 @@ function Game(props: GameProps) {
             <div className="boards">
                 {answers.map((answer, index) =>
                     <Board key={index}
-                        answer={answer.word}
+                        answerLength={answer.word.length}
                         guessLimit={6}
                         previousGuesses={(answer.solvedAt === null ? previousGuesses : previousGuesses.slice(0, answer.solvedAt + 1)).map((guess => checkWord(guess, answer.word)))}
                         currentGuess={answer.solvedAt === null ? checkWord(currentGuess, answer.word) : []}
@@ -117,12 +123,6 @@ function Game(props: GameProps) {
                 )}
             </div>
             <p>{message}</p>
-            {inProgress || <div>
-                <button onClick={(event) => {
-                    startNewGame();
-                    event.currentTarget.blur(); // If it remains focused we can't use the enter key anymore
-                }}>New Game</button>
-            </div>}
             <Keyboard onKey={onKey} letterInfo={checkAllLettersMultipleAnswers(previousGuesses, answers.map(answer => answer.word))} />
         </>
     )

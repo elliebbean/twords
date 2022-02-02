@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/twords/static/css/main.3bc82395.css",
+    "main.js": "/twords/static/js/main.a8838c1a.js",
+    "index.html": "/twords/index.html",
+    "main.3bc82395.css.map": "/twords/static/css/main.3bc82395.css.map",
+    "main.a8838c1a.js.map": "/twords/static/js/main.a8838c1a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3bc82395.css",
+    "static/js/main.a8838c1a.js"
+  ]
+}

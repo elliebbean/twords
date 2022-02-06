@@ -1,31 +1,29 @@
+import { BoardState } from "./Game";
 import Line from "./Line";
-import { CheckedLetter } from "./wordCheck";
 
 interface BoardProps {
-    answerLength: number;
-    guessLimit: number;
-    previousGuesses: CheckedLetter[][];
-    currentGuess: CheckedLetter[];
+  board: BoardState;
+  currentGuess: string;
 }
 
-function Board({ answerLength, guessLimit, previousGuesses, currentGuess }: BoardProps) {
-    const lines = [...Array(guessLimit)].map((_, i) => {
-        if (i < previousGuesses.length) {
-            return <Line key={i} guess={previousGuesses[i]} length={answerLength} showResults={true} />;
-        }
-        else if (i === previousGuesses.length) {
-            return <Line key={i} guess={currentGuess} length={answerLength} showResults={false} />;
-        }
-        else {
-            return <Line key={i} guess={[]} length={answerLength} showResults={false} />;
-        }
-    });
+function Board({ board: { answer, gameStatus, guessLimit, previousGuesses }, currentGuess }: BoardProps) {
+  const lines = previousGuesses.map((guess, i) => <Line key={i} guess={guess} length={answer.length} showResults />);
 
-    return (
-        <div className="board">
-            {lines}
-        </div>
-    );
+  if (gameStatus === "playing") {
+    lines.push(<Line key={lines.length} guess={currentGuess} length={answer.length} />);
+  }
+
+  if (gameStatus !== "won") {
+    for (let i = lines.length; i < guessLimit; i++) {
+      lines.push(<Line key={i} guess={[]} length={answer.length} />);
+    }
+  }
+
+  if (gameStatus === "lost") {
+    lines.push(<Line key={lines.length} guess={answer} length={answer.length} failure />);
+  }
+
+  return <div className="board">{lines}</div>;
 }
 
 export default Board;

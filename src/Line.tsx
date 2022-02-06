@@ -1,34 +1,43 @@
-import { CheckedLetter } from "./wordCheck";
+import { CheckedWord } from "./wordCheck";
 
 interface LineProps {
-    guess: CheckedLetter[];
-    length: number;
-    showResults: boolean;
+  guess: CheckedWord | string;
+  length: number;
+  showResults?: boolean;
+  failure?: boolean;
 }
 
 function Line(props: LineProps) {
+  const { guess, length, showResults, failure } = props;
 
-    const { guess, length, showResults } = props;
+  const letters = [...Array(length)].map((_, i) => {
+    let classes = ["letter"];
+    let guessLetter = "";
 
-    const letters = [...Array(length)].map((_, i) => {
+    if (i < guess.length) {
+      if (typeof guess === "string") {
+        guessLetter = guess[i];
+      } else {
+        guessLetter = guess[i].letter;
+      }
 
-        let className = "letter";
-        let guessLetter = "";
+      if (showResults && typeof guess === "object") {
+        classes.push(guess[i].result);
+      }
 
-        if (i < guess.length) {
-            guessLetter = guess[i].letter
-
-            if (showResults) {
-                className += " " + guess[i].result;
-            }
-        }
-
-        return <div className={className} key={i}>{guessLetter}</div>;
-    });
+      if (failure) {
+        classes.push("failure");
+      }
+    }
 
     return (
-        <div className="line">{letters}</div>
+      <div className={classes.join(" ")} key={i}>
+        {guessLetter}
+      </div>
     );
+  });
+
+  return <div className="line">{letters}</div>;
 }
 
 export default Line;

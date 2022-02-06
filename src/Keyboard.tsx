@@ -1,50 +1,56 @@
 import { LetterResult } from "./wordCheck";
 
 const keys = [
-    ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
-    ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-    ["⌫", "z", "x", "c", "v", "b", "n", "m", "↩"]
+  ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+  ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+  ["⌫", "z", "x", "c", "v", "b", "n", "m", "↩"],
 ];
 
 const specialKeys: { [index: string]: string } = {
-    "⌫": "Backspace",
-    "↩": "Enter",
-}
+  "⌫": "Backspace",
+  "↩": "Enter",
+};
 
 interface KeyboardProps {
-    letterInfo: Map<string, LetterResult[]>,
-    onKey: (key: string) => void
+  letterInfo: Map<string, LetterResult>[];
+  onKey: (key: string) => void;
 }
 
 function Keyboard({ letterInfo, onKey }: KeyboardProps) {
-    return (
-        <div className="keyboard">
-            {keys.map((row, index) =>
-                <div className="row" key={index}>{
-                    row.map(letter => {
+  return (
+    <div className="keyboard">
+      {keys.map((row, index) => (
+        <div className="row" key={index}>
+          {row.map((letter) => {
+            const classNames = ["key"];
+            let keyValue = letter;
 
-                        const [leftClass, rightClass] = letterInfo.get(letter) ?? []
-                        const classNames = ["key"];
-                        let keyValue = letter;
+            if (letter in specialKeys) {
+              classNames.push("special");
+              keyValue = specialKeys[letter];
+            } else {
+              const leftResult = letterInfo[0]?.get(letter);
+              const rightResult = letterInfo[1]?.get(letter);
 
-                        if (leftClass != null) {
-                            classNames.push(`left-${leftClass}`);
-                        }
+              if (leftResult != null) {
+                classNames.push(`left-${leftResult}`);
+              }
 
-                        if (rightClass != null) {
-                            classNames.push(`right-${rightClass}`);
-                        }
+              if (rightResult != null) {
+                classNames.push(`right-${rightResult}`);
+              }
+            }
 
-                        if (letter in specialKeys) {
-                            classNames.push("special")
-                            keyValue = specialKeys[letter];
-                        }
-
-                        return <button onClick={() => onKey(keyValue)} className={classNames.join(" ")} key={letter}>{letter}</button>;
-                    }
-                    )}</div>)}
+            return (
+              <button onClick={() => onKey(keyValue)} className={classNames.join(" ")} key={letter}>
+                {letter}
+              </button>
+            );
+          })}
         </div>
-    )
+      ))}
+    </div>
+  );
 }
 
 export default Keyboard;

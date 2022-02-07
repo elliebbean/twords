@@ -178,7 +178,6 @@ function Game(props: GameProps) {
   );
 
   useEffect(() => {
-    console.log("Adding keyboardListener", Date.now());
     const keyDownListener = (event: KeyboardEvent) => {
       const key = event.key;
       onKey(key);
@@ -187,7 +186,6 @@ function Game(props: GameProps) {
     document.addEventListener("keydown", keyDownListener);
 
     return () => {
-      console.log("Removing keyboardListener", Date.now());
       document.removeEventListener("keydown", keyDownListener);
     };
   }, [onKey]);

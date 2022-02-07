@@ -80,6 +80,10 @@ body,
   background-color: #393939;
 }
 
+.keyboard {
+  margin-bottom: 0.2em;
+}
+
 .keyboard .row {
   display: flex;
 }
@@ -87,15 +91,15 @@ body,
 .key {
   display: inline-flex;
   flex: 1 1;
-  height: 3em;
+  height: 3.5em;
   border: none;
-  border-radius: 5px;
-  margin: 0.2em;
+  margin: 0;
+  padding: 0.2em;
+  background: transparent;
   justify-content: center;
   align-items: center;
   --left-color: #5c5c5c;
   --right-color: #5c5c5c;
-  background: linear-gradient(to right, var(--left-color) 50%, var(--right-color) 50%);
   color: #cccccc;
   font-size: 1.25rem;
   font-weight: bold;
@@ -103,8 +107,27 @@ body,
   text-shadow: 0 0 4px black;
 }
 
+@media (max-width: 500px) {
+  .key {
+    height: 3.5em;
+  }
+}
+
+.key > div {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, var(--left-color) 50%, var(--right-color) 50%);
+}
+
 .key.special {
   flex-grow: 1.5;
+}
+
+.key.special > div {
   background: #888;
 }
 

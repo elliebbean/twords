@@ -42,8 +42,8 @@ function Keyboard({ letterInfo, onKey }: KeyboardProps) {
             }
 
             return (
-              <button onClick={() => onKey(keyValue)} className={classNames.join(" ")} key={letter}>
-                {letter}
+              <button onPointerDown={() => onKey(keyValue)} className={classNames.join(" ")} key={letter}>
+                <div>{letter}</div>
               </button>
             );
           })}

@@ -2,9 +2,12 @@ import { useCallback, useEffect, useReducer } from "react";
 import Board from "./Board";
 import Keyboard from "./Keyboard";
 
-import validAnswers from "./validAnswers.json";
-import validGuesses from "./validGuesses.json";
+import _validAnswers from "./validAnswers.json";
+import _validGuesses from "./validGuesses.json";
 import { CheckedWord, checkWord, getAllLetterResults } from "./wordCheck";
+
+const validAnswers: { [index: number]: string[] | undefined } = _validAnswers;
+const validGuesses: { [index: number]: string[] | undefined } = _validGuesses;
 
 type GameStatus = "playing" | "won" | "lost";
 
@@ -78,7 +81,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         };
       }
 
-      if (!validGuesses.includes(state.currentGuess)) {
+      if (!validGuesses[state.currentGuess.length]?.includes(state.currentGuess)) {
         return {
           ...state,
           error: "Invalid guess",
@@ -137,15 +140,20 @@ function initializeGame(setup: GameSetup): GameState {
   };
 }
 
-function generateAnswer(): string {
-  return validAnswers[Math.floor(Math.random() * validAnswers.length)];
+function generateAnswer(length: number): string {
+  const answers = validAnswers[length];
+  if (answers) {
+    return answers[Math.floor(Math.random() * answers.length)];
+  } else {
+    throw new Error(`No answers of length ${length} were found`);
+  }
 }
 
 function generateGameSetup(): GameSetup {
   return {
     boards: [
-      { answer: generateAnswer(), guessLimit: 6 },
-      { answer: generateAnswer(), guessLimit: 6 },
+      { answer: generateAnswer(5), guessLimit: 6 },
+      { answer: generateAnswer(5), guessLimit: 6 },
     ],
   };
 }

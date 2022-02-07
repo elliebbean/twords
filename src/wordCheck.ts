@@ -30,16 +30,19 @@ export function checkWord(guess: string, answer: string): CheckedWord {
   });
 
   let checkedWord: CheckedWord = [];
-  guess.split("").forEach((letter, index) => {
-    if (letter === answer[index]) {
-      checkedWord.push({ letter: letter, result: "correct" });
-    } else if ((unmatchedLetters.get(letter) ?? 0) > 0) {
-      checkedWord.push({ letter: letter, result: "valid" });
-      unmatchedLetters.set(letter, (unmatchedLetters.get(letter) ?? 0) - 1);
-    } else {
-      checkedWord.push({ letter: letter, result: "invalid" });
-    }
-  });
+  guess
+    .split("")
+    .slice(0, answer.length)
+    .forEach((letter, index) => {
+      if (letter === answer[index]) {
+        checkedWord.push({ letter: letter, result: "correct" });
+      } else if ((unmatchedLetters.get(letter) ?? 0) > 0) {
+        checkedWord.push({ letter: letter, result: "valid" });
+        unmatchedLetters.set(letter, (unmatchedLetters.get(letter) ?? 0) - 1);
+      } else {
+        checkedWord.push({ letter: letter, result: "invalid" });
+      }
+    });
 
   return checkedWord;
 }

@@ -1,4 +1,4 @@
-import { CheckedWord } from "./wordCheck";
+import { CheckedWord } from "services/wordCheck";
 
 interface LineProps {
   guess: CheckedWord | string;

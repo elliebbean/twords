@@ -1,12 +1,12 @@
-import { BoardState } from "./Game";
-import Line from "./Line";
+import Line from "components/Line";
+import { BoardState } from "services/game";
 
 interface BoardProps {
   board: BoardState;
   currentGuess: string;
 }
 
-function Board({ board: { answer, gameStatus, guessLimit, previousGuesses }, currentGuess }: BoardProps) {
+function Board({ board: { answer, status: gameStatus, guessLimit, previousGuesses }, currentGuess }: BoardProps) {
   const lines = previousGuesses.map((guess, i) => <Line key={i} guess={guess} length={answer.length} showResults />);
 
   if (gameStatus === "playing") {

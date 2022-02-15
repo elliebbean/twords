@@ -1,4 +1,4 @@
-import { LetterResult } from "./wordCheck";
+import { LetterResult } from "services/wordCheck";
 
 const keys = [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
@@ -10,7 +10,6 @@ const specialKeys: { [index: string]: string } = {
   "⌫": "Backspace",
   "↩": "Enter",
 };
-
 interface KeyboardProps {
   letterInfo: Map<string, LetterResult>[];
   onKey: (key: string) => void;

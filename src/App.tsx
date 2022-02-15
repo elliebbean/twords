@@ -1,11 +1,11 @@
-import "./App.css";
-import Game from "./Game";
+import "App.css";
+import Game from "components/Game";
 
 function App() {
   return (
     <div className="app">
       <h1>two|rds</h1>
-      <Game guessLimit={6} wordLength={5} />
+      <Game mode={"random"} />
     </div>
   );
 }

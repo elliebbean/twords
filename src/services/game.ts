@@ -1,15 +1,7 @@
-import { CheckedWord, checkWord } from "services/wordCheck";
-import _validWords from "assets/words.json";
 import _validAnswers from "assets/answers.json";
+import _validWords from "assets/words.json";
 import Random from "services/random";
-
-const validWords: { [index: number]: string[] | undefined } = _validWords;
-const validAnswers: { [index: number]: string[] | undefined } = _validAnswers;
-
-// Seperate seeds for daily/random games so you can't reproduce a daily game just by entering a specific seed
-// (that's unlikely to ever matter, but we need to fill the second part of the seed with something anyway)
-const dailySeed = 0xda7e;
-const randomSeed = 0x5eed;
+import { CheckedWord, checkWord } from "services/wordCheck";
 
 export type GameMode = "daily" | "random";
 
@@ -41,6 +33,14 @@ export type GameAction =
   | { type: "backspace" }
   | { type: "submit" }
   | { type: "restart"; settings: GameSettings };
+
+const validWords: { [index: number]: string[] | undefined } = _validWords;
+const validAnswers: { [index: number]: string[] | undefined } = _validAnswers;
+
+// Seperate seeds for daily/random games so you can't reproduce a daily game just by entering a specific seed
+// (that's unlikely to ever matter, but we need to fill the second part of the seed with something anyway)
+const dailySeed = 0xda7e;
+const randomSeed = 0x5eed;
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
@@ -128,10 +128,20 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
   }
 }
 
+// How likely we are to pick a word of different lengths
+const wordLengthProbabilities: { [index: number]: number | undefined } = {
+  4: 0.5,
+  5: 1.5,
+  6: 1,
+  7: 0.5,
+};
+
 export function createGame(settings: GameSettings): GameState {
   const seedPrefix = settings.mode === "daily" ? dailySeed : randomSeed;
   const random = new Random(seedPrefix, settings.seed);
-  const wordLength = Number.parseInt(random.nextElement(Object.keys(validAnswers)));
+
+  const wordLengths = Object.keys(validAnswers).map((key) => parseInt(key));
+  const wordLength = random.nextElementWeighted(wordLengths, (length) => wordLengthProbabilities[length] ?? 0);
 
   const answers = [random.nextElement(validAnswers[wordLength]!)];
   answers.push(random.nextElement(validAnswers[wordLength]!.filter((word) => !answers.includes(word))));

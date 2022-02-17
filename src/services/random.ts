@@ -63,6 +63,25 @@ class Random {
   }
 
   /**
+   * Returns a randomly chosen element of `array` with the relative probabilities of each element being chosen
+   * determined by the `weight` function
+   */
+  nextElementWeighted<T>(array: T[], weight: (element: T) => number): T {
+    const total = array.reduce((sum, element) => sum + weight(element), 0);
+    const random = this.nextInt(0, total);
+
+    let sum = 0;
+    for (const element of array) {
+      sum += weight(element);
+      if (sum > random) {
+        return element;
+      }
+    }
+
+    return array[array.length - 1];
+  }
+
+  /**
    * Returns an externally-generated (from `Math.random()`) random number suitable for seeding the generator.
    */
   static randomSeed(): number {

@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useReducer } from "react";
 import Board from "components/Board";
 import Keyboard from "components/Keyboard";
-
+import { useCallback, useEffect, useReducer } from "react";
+import { createGame, GameMode, gameReducer, generateGameSettings } from "services/game";
 import { getAllLetterResults } from "services/wordCheck";
-import { gameReducer, createGame, GameMode, generateGameSettings } from "services/game";
+import StatusBar from "./StatusBar";
 
 interface GameProps {
   mode: GameMode;
@@ -61,6 +61,7 @@ function Game(props: GameProps) {
         ))}
       </div>
       <p>{message}</p>
+      <StatusBar game={state} />
       <Keyboard onKey={onKey} letterInfo={state.boards.map((board) => getAllLetterResults(board.previousGuesses))} />
     </>
   );

@@ -15,11 +15,11 @@ body,
   height: 100%;
   margin: 0 auto;
   flex-direction: column;
-  text-align: center;
 }
 
-.app h1 {
+h1 {
   font-variant: small-caps;
+  text-align: center;
 }
 
 .boards {
@@ -78,6 +78,24 @@ body,
 
 .letter.invalid {
   background-color: #393939;
+}
+
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.statusbar p {
+  display: inline-block;
+}
+
+.statusbar a,
+.statusbar a:visited {
+  color: #ccc;
+}
+
+.statusbar a:hover {
+  color: #fff;
 }
 
 .keyboard {

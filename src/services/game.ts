@@ -166,6 +166,14 @@ export function generateGameSettings(mode: GameMode): GameSettings {
     case "random":
       return { ...settings, seed: Random.randomSeed() };
     case "daily":
-      return { ...settings, seed: Math.floor(Date.now() / (1000 * 60 * 60 * 24)) };
+      return { ...settings, seed: dateToSeed(new Date()) };
   }
+}
+
+export function dateToSeed(date: Date): number {
+  return Math.floor(date.getTime() / (1000 * 60 * 60 * 24));
+}
+
+export function seedToDate(seed: number): Date {
+  return new Date(seed * 1000 * 60 * 60 * 24);
 }

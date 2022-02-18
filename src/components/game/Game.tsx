@@ -1,7 +1,8 @@
 import Board from "components/board/Board";
 import Keyboard from "components/keyboard/Keyboard";
 import { useCallback, useEffect, useReducer } from "react";
-import { createGame, GameMode, gameReducer, generateGameSettings } from "services/game";
+import { GameMode, gameReducer, generateGameSettings, loadOrCreateGame } from "services/game";
+import { saveGame } from "services/localStorage";
 import { getAllLetterResults } from "services/wordCheck";
 import StatusBar from "../statusbar/StatusBar";
 import "./Game.css";
@@ -11,7 +12,11 @@ interface GameProps {
 }
 
 function Game(props: GameProps) {
-  const [state, dispatch] = useReducer(gameReducer, generateGameSettings(props.mode), createGame);
+  const [state, dispatch] = useReducer(gameReducer, generateGameSettings(props.mode), loadOrCreateGame);
+
+  useEffect(() => {
+    saveGame(state);
+  }, [state]);
 
   // We don't want to be removing/adding the keyboard listener every render, that could cause dropped inputs
   // So store the onKey handler as a callback, then we only have to re-run the effect when the game status changes.

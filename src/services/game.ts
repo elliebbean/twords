@@ -2,6 +2,7 @@ import _validAnswers from "assets/answers.json";
 import _validWords from "assets/words.json";
 import Random from "services/random";
 import { CheckedWord, checkWord } from "services/wordCheck";
+import { loadGame } from "./localStorage";
 
 export type GameMode = "daily" | "random";
 
@@ -162,17 +163,35 @@ export function createGame(settings: GameSettings): GameState {
   };
 }
 
+export function loadOrCreateGame(settings: GameSettings): GameState {
+  const savedGame = loadGame(settings.mode);
+
+  if (!savedGame) {
+    return createGame(settings);
+  } else if (settings.mode === "daily" && savedGame.seed === settings.seed) {
+    return savedGame;
+  } else if (settings.mode === "random" && savedGame.status === "playing") {
+    return savedGame;
+  } else {
+    return createGame(settings);
+  }
+}
+
 export function generateGameSettings(mode: GameMode): GameSettings {
   const settings = { mode };
   switch (mode) {
     case "random":
       return { ...settings, seed: Random.randomSeed() };
     case "daily":
-      return { ...settings, seed: dateToSeed(new Date()) };
+      return { ...settings, seed: currentDailySeed() };
   }
 }
 
-export function dateToSeed(date: Date): number {
+function currentDailySeed(): number {
+  return dateToSeed(new Date());
+}
+
+function dateToSeed(date: Date): number {
   return Math.floor(date.getTime() / (1000 * 60 * 60 * 24));
 }
 

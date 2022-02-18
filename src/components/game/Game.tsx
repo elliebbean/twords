@@ -25,7 +25,7 @@ function Game(props: GameProps) {
       if (key === "Enter") {
         if (state.status === "playing") {
           dispatch({ type: "submit" });
-        } else {
+        } else if (props.mode !== "daily") {
           dispatch({ type: "restart", settings: generateGameSettings(props.mode) });
         }
       } else if (key === "Backspace") {
@@ -54,7 +54,7 @@ function Game(props: GameProps) {
   if (state.error) {
     message = state.error;
   } else if (state.status === "won") {
-    message = "Congratulations, you won! Enter to play again.";
+    message = "Congratulations, you won!" + (props.mode === "daily" ? "" : " Enter to play again.");
   } else if (state.status === "lost") {
     message = "Sorry, you lost. Enter to play again.";
   }

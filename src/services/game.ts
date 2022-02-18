@@ -187,11 +187,11 @@ export function generateGameSettings(mode: GameMode): GameSettings {
   }
 }
 
-function currentDailySeed(): number {
+export function currentDailySeed(): number {
   return dateToSeed(new Date());
 }
 
-function dateToSeed(date: Date): number {
+export function dateToSeed(date: Date): number {
   return Math.floor(date.getTime() / (1000 * 60 * 60 * 24));
 }
 

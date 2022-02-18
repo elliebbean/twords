@@ -146,14 +146,16 @@ export function createGame(settings: GameSettings): GameState {
   const answers = [random.nextElement(validAnswers[wordLength]!)];
   answers.push(random.nextElement(validAnswers[wordLength]!.filter((word) => !answers.includes(word))));
 
+  const freeGuess = random.nextElement(validAnswers[wordLength]!.filter((word) => !answers.includes(word)));
+
   return {
     ...settings,
     status: "playing",
     boards: answers.map((answer) => ({
       answer,
-      guessLimit: 6,
+      guessLimit: 7,
       status: "playing",
-      previousGuesses: [],
+      previousGuesses: [checkWord(freeGuess, answer)],
     })),
     currentGuess: "",
     error: null,

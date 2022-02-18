@@ -1,5 +1,5 @@
 import "App.css";
-import Game from "components/Game";
+import Game from "components/game/Game";
 import { GameMode } from "services/game";
 
 function App() {

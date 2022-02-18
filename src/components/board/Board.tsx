@@ -1,5 +1,6 @@
-import Line from "components/Line";
+import Line from "components/line/Line";
 import { BoardState } from "services/game";
+import "./Board.css";
 
 interface BoardProps {
   board: BoardState;

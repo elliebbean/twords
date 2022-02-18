@@ -1,0 +1,16 @@
+.game {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  width: min(100%, 800px);
+  margin: 0 auto;
+}
+
+.boards {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex: 1 1;
+  gap: 1rem;
+  margin: 0.4rem;
+}

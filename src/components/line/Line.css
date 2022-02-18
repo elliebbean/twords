@@ -1,0 +1,44 @@
+.line {
+  display: flex;
+  justify-content: center;
+}
+
+.letter {
+  display: inline-flex;
+  flex: 1 1;
+  aspect-ratio: 1/1;
+  max-width: 2em;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
+  border: 1px solid #555;
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.letter {
+  transition: background-color 0.25s ease-in;
+}
+
+@media (max-width: 500px), (max-height: 800px) {
+  .letter {
+    font-size: 1.25rem;
+  }
+}
+
+.letter.failure {
+  background-color: #813f3f;
+}
+
+.letter.correct {
+  background-color: #4a813f;
+}
+
+.letter.valid {
+  background-color: #a7964f;
+}
+
+.letter.invalid {
+  background-color: #393939;
+}

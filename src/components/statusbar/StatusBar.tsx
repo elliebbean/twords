@@ -1,4 +1,5 @@
 import { GameState, seedToDate } from "services/game";
+import "./StatusBar.css";
 
 interface StatusBarProps {
   game: GameState;

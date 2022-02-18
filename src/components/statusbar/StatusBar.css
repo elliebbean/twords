@@ -1,0 +1,17 @@
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.statusbar p {
+  display: inline-block;
+}
+
+.statusbar a,
+.statusbar a:visited {
+  color: #ccc;
+}
+
+.statusbar a:hover {
+  color: #fff;
+}

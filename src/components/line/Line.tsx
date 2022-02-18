@@ -1,4 +1,5 @@
 import { CheckedWord } from "services/wordCheck";
+import "./Line.css";
 
 interface LineProps {
   guess: CheckedWord | string;

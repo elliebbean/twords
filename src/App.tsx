@@ -1,5 +1,6 @@
 import "App.css";
 import Game from "components/game/Game";
+import Header from "components/header/Header";
 import { GameMode } from "services/game";
 
 function App() {
@@ -11,8 +12,10 @@ function App() {
 
   return (
     <div className="app">
-      <h1>two|rds</h1>
-      <Game mode={gameMode} />
+      <div className="center">
+        <Header />
+        <Game mode={gameMode} />
+      </div>
     </div>
   );
 }

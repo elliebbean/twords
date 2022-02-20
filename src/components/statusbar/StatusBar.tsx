@@ -1,25 +1,25 @@
-import { GameState, seedToDate } from "services/game";
+import ShareButton from "components/sharebutton/ShareButton";
+import { describeSeed, GameState } from "services/game";
 import "./StatusBar.css";
 
 interface StatusBarProps {
   game: GameState;
 }
+
 function StatusBar({ game }: StatusBarProps) {
-  let seedDescription;
   let link;
 
   if (game.mode === "daily") {
-    seedDescription = seedToDate(game.seed).toLocaleDateString();
     link = <a href="/?random">play a random game</a>;
   } else {
-    seedDescription = "#" + game.seed.toString(36);
     link = <a href="/">play daily game</a>;
   }
   return (
     <div className="statusbar">
       <p>
-        {game.mode} {seedDescription}
+        {game.mode} {describeSeed(game.seed, game.mode)}
       </p>
+      <ShareButton game={game} />
       <p>{link}</p>
     </div>
   );

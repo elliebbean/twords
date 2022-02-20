@@ -14,10 +14,8 @@ function Board({ board: { answer, status: gameStatus, guessLimit, previousGuesse
     lines.push(<Line key={lines.length} guess={currentGuess} length={answer.length} />);
   }
 
-  if (gameStatus !== "won") {
-    for (let i = lines.length; i < guessLimit; i++) {
-      lines.push(<Line key={i} guess={[]} length={answer.length} />);
-    }
+  for (let i = lines.length; i < guessLimit; i++) {
+    lines.push(<Line key={i} guess={[]} length={answer.length} />);
   }
 
   if (gameStatus === "lost") {

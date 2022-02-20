@@ -1,7 +1,7 @@
 import _validAnswers from "assets/answers.json";
 import _validWords from "assets/words.json";
 import Random from "services/random";
-import { CheckedWord, checkWord } from "services/wordCheck";
+import { CheckedWord, checkWord, LetterResult } from "services/wordCheck";
 import { loadGame } from "./localStorage";
 
 export type GameMode = "daily" | "random";
@@ -17,6 +17,7 @@ export interface BoardState {
   status: GameStatus;
   answer: string;
   guessLimit: number;
+  freeGuesses: number;
   previousGuesses: CheckedWord[];
 }
 
@@ -155,6 +156,7 @@ export function createGame(settings: GameSettings): GameState {
     boards: answers.map((answer) => ({
       answer,
       guessLimit: 7,
+      freeGuesses: 1,
       status: "playing",
       previousGuesses: [checkWord(freeGuess, answer)],
     })),
@@ -197,4 +199,66 @@ export function dateToSeed(date: Date): number {
 
 export function seedToDate(seed: number): Date {
   return new Date(seed * 1000 * 60 * 60 * 24);
+}
+
+export function describeSeed(seed: number, mode: GameMode) {
+  if (mode === "daily") {
+    return seedToDate(seed).toLocaleDateString();
+  } else {
+    return "#" + seed.toString(36);
+  }
+}
+
+function resultToEmoji(result: LetterResult): string {
+  switch (result) {
+    case "correct":
+      return "🟩";
+    case "valid":
+      return "🟨";
+    case "invalid":
+      return "⬛";
+  }
+}
+
+export function describeGameWithEmoji(game: GameState): string {
+  let description: string[] = [];
+
+  description.push(`two|rds ${game.mode} ${describeSeed(game.seed, game.mode)}`);
+
+  const scores = game.boards
+    .map((board) => (board.status === "won" ? board.previousGuesses.length - board.freeGuesses : "X"))
+    .join("|");
+
+  const points = game.boards
+    .map((board) => (board.status !== "won" ? 0 : 1 + board.guessLimit - board.previousGuesses.length))
+    .reduce((sum, i) => sum + i, 0);
+
+  let rows = Math.max(...game.boards.map((board) => board.previousGuesses.length));
+  if (game.status === "lost") {
+    // Add additional row for lost boards
+    rows++;
+  }
+  description.push(`${scores} (${points}pts)`);
+
+  for (let i = 0; i < rows; i++) {
+    const currentRowDescriptions: string[] = [];
+
+    for (const board of game.boards) {
+      const guess = board.previousGuesses[i];
+      if (guess) {
+        currentRowDescriptions.push(guess.map((letter) => resultToEmoji(letter.result)).join(""));
+      } else {
+        const emoji = board.status === "won" ? resultToEmoji("correct") : "🟥";
+        currentRowDescriptions.push(new Array(board.answer.length).fill(emoji).join(""));
+      }
+    }
+
+    // unicode em space
+    description.push(currentRowDescriptions.join("\u2003"));
+  }
+
+  const url = window.location.origin + "/?" + game.mode;
+  description.push(url);
+
+  return description.join("\n");
 }

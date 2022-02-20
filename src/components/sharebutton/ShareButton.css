@@ -1,0 +1,13 @@
+button.share {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline;
+  color: #ccc;
+  font-size: 1rem;
+}
+
+button.share:hover {
+  color: #fff;
+}

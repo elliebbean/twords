@@ -1,12 +1,27 @@
 header {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
+  justify-items: center;
+  align-items: start;
   width: 100%;
+  min-height: 2.75rem;
   border-bottom: 1px solid #ccc;
-  padding-bottom: 0.25rem;
+}
+
+header > :first-child {
+  justify-self: start;
+}
+
+header > :last-child {
+  justify-self: end;
 }
 
 header h1 {
   font-variant: small-caps;
   margin: 0;
+  line-height: 2rem;
+}
+
+header .icon {
+  font-size: 1rem;
 }

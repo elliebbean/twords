@@ -1,0 +1,74 @@
+.modal {
+  position: absolute;
+  inset: 0.5rem;
+  max-height: 600px;
+  max-width: 600px;
+  margin: auto;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  border: 1px solid #555;
+  background: #202027;
+  animation: zoomIn 250ms ease-in-out;
+}
+
+.modal.closing {
+  animation: zoomOut 250ms ease-in-out;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: black;
+  opacity: 0.8;
+  animation: fadeIn 250ms ease-in-out;
+}
+
+.overlay.closing {
+  animation: fadeOut 250ms ease-in-out;
+}
+
+.modal .modal-header {
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.modal .modal-header h1 {
+  flex: 1 0;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.modal .modal-header .icon {
+  font-size: 0.75rem;
+}
+
+.modal .modal-content {
+  padding: 0.5rem;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes zoomOut {
+  to {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}

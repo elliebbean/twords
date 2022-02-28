@@ -1,6 +1,7 @@
 import IconButton from "components/iconbutton/IconButton";
 import { CloseIcon } from "components/icons/Icons";
-import { ReactNode, useEffect, useState } from "react";
+import FocusTrap from "focus-trap-react";
+import React, { ReactNode, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import "./Modal.css";
 
@@ -16,12 +17,6 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
   const [overlayClosing, setOverlayClosing] = useState(false);
   const [modalClosing, setModalClosing] = useState(false);
 
-  const startClosing = () => {
-    setClosing(true);
-    setModalClosing(true);
-    setOverlayClosing(true);
-  };
-
   useEffect(() => {
     if (isClosing && !overlayClosing && !modalClosing) {
       setClosing(false);
@@ -29,19 +24,39 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
     }
   }, [isClosing, overlayClosing, modalClosing, onClose]);
 
-  const content = (
-    <>
-      <div className="modal-header">
-        <h1>{title}</h1>
-        <IconButton label={"Close"} onClick={startClosing}>
-          <CloseIcon />
-        </IconButton>
-      </div>
-      <div className="modal-content">{children}</div>
-    </>
-  );
+  useEffect(() => {
+    const keyDownListener = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        startClosing();
+      }
+    };
+
+    document.addEventListener("keydown", keyDownListener);
+
+    return () => {
+      document.removeEventListener("keydown", keyDownListener);
+    };
+  }, []);
+
+  const startClosing = () => {
+    setModalClosing(true);
+    setOverlayClosing(true);
+    setClosing(true);
+  };
 
   if (isOpen) {
+    const content = (
+      <>
+        <div className="modal-header">
+          <h1>{title}</h1>
+          <IconButton label={"Close"} onClick={startClosing}>
+            <CloseIcon />
+          </IconButton>
+        </div>
+        <div className="modal-content">{children}</div>
+      </>
+    );
+
     return ReactDOM.createPortal(
       <>
         {overlayClosing ? (
@@ -50,13 +65,15 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
           <div className="overlay" onClick={startClosing} />
         )}
 
-        {modalClosing ? (
-          <div className="modal closing" onAnimationEnd={() => setModalClosing(false)}>
-            {content}
-          </div>
-        ) : (
-          <div className="modal">{content}</div>
-        )}
+        <FocusTrap>
+          {modalClosing ? (
+            <div className="modal closing" onAnimationEnd={() => setModalClosing(false)}>
+              {content}
+            </div>
+          ) : (
+            <div className="modal">{content}</div>
+          )}
+        </FocusTrap>
       </>,
       document.body
     );

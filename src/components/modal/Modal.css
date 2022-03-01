@@ -9,6 +9,8 @@
   border: 1px solid #555;
   background: #202027;
   animation: zoomIn 250ms ease-in-out forwards;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal.closing {
@@ -45,6 +47,7 @@
 
 .modal .modal-content {
   padding: 0.5rem;
+  overflow-y: auto;
 }
 
 @keyframes zoomIn {

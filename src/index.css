@@ -20,6 +20,25 @@ body {
   color: #cccccc;
 }
 
+h1,
+h2,
+h3 {
+  margin: 0.25em 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: #ccc;
+}
+
+a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
 /**
  * Hide an element visually but leave the content available for assistive technologies
  */

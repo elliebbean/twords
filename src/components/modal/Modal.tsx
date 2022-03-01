@@ -64,7 +64,7 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
     return ReactDOM.createPortal(
       <>
         <FocusTrap>
-          <div>
+          <div className="modal-container">
             {isClosing ? (
               <div className="overlay closing" onAnimationEnd={() => setOverlayClosing(false)} />
             ) : (

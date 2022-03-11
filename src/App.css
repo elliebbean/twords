@@ -1,5 +1,15 @@
 .app {
   height: 100%;
+  --color-correct: #4a813f;
+  --color-valid: #a7964f;
+  --color-invalid: #393939;
+  --color-failure: #813f3f;
+}
+
+.app.high-contrast {
+  --color-correct: #d66f20;
+  --color-valid: #1c48cc;
+  --color-invalid: #343434;
 }
 
 .center {

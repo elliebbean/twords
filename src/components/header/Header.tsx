@@ -1,5 +1,5 @@
 import IconButton from "components/iconbutton/IconButton";
-import { HelpIcon } from "components/icons/Icons";
+import { HelpIcon, SettingsIcon } from "components/icons/Icons";
 import "./Header.css";
 
 interface HeaderProps {
@@ -15,6 +15,9 @@ function Header(props: HeaderProps) {
       <div>
         <IconButton label={"Help"} onClick={props.onHelpButton}>
           <HelpIcon />
+        </IconButton>
+        <IconButton label={"Settings"} onClick={props.onSettingsButton}>
+          <SettingsIcon />
         </IconButton>
       </div>
     </header>

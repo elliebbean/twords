@@ -2,7 +2,6 @@ import IconButton from "components/iconbutton/IconButton";
 import { CloseIcon } from "components/icons/Icons";
 import FocusTrap from "focus-trap-react";
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
-import ReactDOM from "react-dom";
 import "./Modal.css";
 
 interface ModalProps {
@@ -61,7 +60,7 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
       </>
     );
 
-    return ReactDOM.createPortal(
+    return (
       <>
         <FocusTrap>
           <div className="modal-container">
@@ -80,8 +79,7 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
             )}
           </div>
         </FocusTrap>
-      </>,
-      document.body
+      </>
     );
   } else {
     return null;

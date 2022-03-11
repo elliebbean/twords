@@ -46,25 +46,25 @@
 }
 
 .key.left-correct {
-  --left-color: #4a813f;
+  --left-color: var(--color-correct);
 }
 
 .key.right-correct {
-  --right-color: #4a813f;
+  --right-color: var(--color-correct);
 }
 
 .key.left-valid {
-  --left-color: #a7964f;
+  --left-color: var(--color-valid);
 }
 
 .key.right-valid {
-  --right-color: #a7964f;
+  --right-color: var(--color-valid);
 }
 
 .key.left-invalid {
-  --left-color: #393939;
+  --left-color: var(--color-invalid);
 }
 
 .key.right-invalid {
-  --right-color: #393939;
+  --right-color: var(--color-invalid);
 }

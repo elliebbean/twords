@@ -1,15 +1,19 @@
+import { useSettings } from "hooks/settings";
 import { LetterResult } from "services/wordCheck";
 import "./Keyboard.css";
 
-const keys = [
+const Backspace = "⌫";
+const Enter = "↩";
+
+const qwertyLayout = (specialKey1: string, specialKey2: string) => [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
   ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-  ["⌫", "z", "x", "c", "v", "b", "n", "m", "↩"],
+  [specialKey1, "z", "x", "c", "v", "b", "n", "m", specialKey2],
 ];
 
 const specialKeys: { [index: string]: string } = {
-  "⌫": "Backspace",
-  "↩": "Enter",
+  [Backspace]: "Backspace",
+  [Enter]: "Enter",
 };
 interface KeyboardProps {
   letterInfo: Map<string, LetterResult>[];
@@ -17,6 +21,10 @@ interface KeyboardProps {
 }
 
 function Keyboard({ letterInfo, onKey }: KeyboardProps) {
+  const [settings] = useSettings();
+
+  const keys = settings.flipKeyboardButtons ? qwertyLayout(Enter, Backspace) : qwertyLayout(Backspace, Enter);
+
   return (
     <div className="keyboard">
       {keys.map((row, index) => (

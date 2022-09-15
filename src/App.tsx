@@ -17,6 +17,8 @@ function App() {
   let gameMode: GameMode = "daily";
   if (searchParams.has("random")) {
     gameMode = "random";
+  } else if (searchParams.has("endless")) {
+    gameMode = "endless";
   }
 
   return (

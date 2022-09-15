@@ -1,10 +1,10 @@
 import _validAnswers from "assets/answers.json";
 import _validWords from "assets/words.json";
-import Random from "services/random";
+import Random, { RandomState } from "services/random";
 import { CheckedWord, checkWord, LetterResult } from "services/wordCheck";
 import { loadGame } from "./localStorage";
 
-export type GameMode = "daily" | "random";
+export type GameMode = "daily" | "random" | "endless";
 
 export type GameStatus = "playing" | "won" | "lost";
 
@@ -24,6 +24,7 @@ export interface BoardState {
 export interface GameState {
   mode: GameMode;
   seed: number;
+  randomState: RandomState;
   status: GameStatus;
   boards: BoardState[];
   currentGuess: string;
@@ -45,6 +46,8 @@ const dailySeed = 0xda7e;
 const randomSeed = 0x5eed;
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
+  const random = new Random(state.randomState);
+
   switch (action.type) {
     case "letter": {
       if (state.status !== "playing") {
@@ -101,7 +104,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         newBoard.previousGuesses = [...board.previousGuesses, checkWord(state.currentGuess, board.answer)];
 
         if (state.currentGuess === board.answer) {
-          newBoard.status = "won";
+          if (state.mode === "endless") {
+            newBoard.answer = random.nextElement(validAnswers[newBoard.answer.length]!);
+            newBoard.previousGuesses = [checkWord(state.currentGuess, newBoard.answer)];
+          } else {
+            newBoard.status = "won";
+          }
         } else if (newBoard.previousGuesses.length >= newBoard.guessLimit) {
           newBoard.status = "lost";
         }
@@ -117,6 +125,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       }
       return {
         ...state,
+        randomState: random.getState(),
         status: newGameState,
         boards: newBoards,
         currentGuess: "",
@@ -151,6 +160,7 @@ export function createGame(settings: GameSettings): GameState {
   return {
     ...settings,
     status: "playing",
+    randomState: random.getState(),
     boards: answers.map((answer) => ({
       answer,
       guessLimit: 7,
@@ -181,6 +191,7 @@ export function generateGameSettings(mode: GameMode): GameSettings {
   const settings = { mode };
   switch (mode) {
     case "random":
+    case "endless":
       return { ...settings, seed: Random.randomSeed() };
     case "daily":
       return { ...settings, seed: currentDailySeed() };

@@ -1,4 +1,4 @@
-type RandomState = [number, number];
+export type RandomState = [number, number];
 
 class Random {
   _state: RandomState;
@@ -24,7 +24,7 @@ class Random {
   /**
    * Returns current state of the generator.
    */
-  getState() {
+  getState(): RandomState {
     return [...this._state];
   }
 

@@ -132,10 +132,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
 // How likely we are to pick a word of different lengths
 const wordLengthProbabilities: { [index: number]: number | undefined } = {
-  4: 0.5,
-  5: 1.5,
+  5: 1.25,
   6: 1,
-  7: 0.5,
 };
 
 export function createGame(settings: GameSettings): GameState {

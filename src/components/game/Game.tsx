@@ -54,9 +54,9 @@ function Game(props: GameProps) {
   if (state.error) {
     message = state.error;
   } else if (state.status === "won") {
-    message = "Congratulations, you won!" + (props.mode === "daily" ? "" : " Enter to play again.");
+    message = "Congratulations, you won!" + (props.mode === "daily" ? "" : " Press enter to play again.");
   } else if (state.status === "lost") {
-    message = "Sorry, you lost. Enter to play again.";
+    message = "Sorry, you lost." + (props.mode === "daily" ? "" : " Press enter to play again.");
   }
 
   return (

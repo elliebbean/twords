@@ -1,3 +1,4 @@
+import Key from "components/key/Key";
 import { useSettings } from "hooks/settings";
 import { LetterResult } from "services/wordCheck";
 import "./Keyboard.css";
@@ -15,6 +16,7 @@ const specialKeys: { [index: string]: string } = {
   [Backspace]: "Backspace",
   [Enter]: "Enter",
 };
+
 interface KeyboardProps {
   letterInfo: Map<string, LetterResult>[];
   onKey: (key: string) => void;
@@ -30,30 +32,16 @@ function Keyboard({ letterInfo, onKey }: KeyboardProps) {
       {keys.map((row, index) => (
         <div className="row" key={index}>
           {row.map((letter) => {
-            const classNames = ["key"];
             let keyValue = letter;
+            let results: [LetterResult?, LetterResult?] | undefined = undefined;
 
             if (letter in specialKeys) {
-              classNames.push("special");
               keyValue = specialKeys[letter];
             } else {
-              const leftResult = letterInfo[0]?.get(letter);
-              const rightResult = letterInfo[1]?.get(letter);
-
-              if (leftResult != null) {
-                classNames.push(`left-${leftResult}`);
-              }
-
-              if (rightResult != null) {
-                classNames.push(`right-${rightResult}`);
-              }
+              results = [letterInfo[0]?.get(letter), letterInfo[1]?.get(letter)];
             }
 
-            return (
-              <button onPointerDown={() => onKey(keyValue)} className={classNames.join(" ")} key={letter}>
-                <div>{letter}</div>
-              </button>
-            );
+            return <Key letter={letter} results={results} onPress={() => onKey(keyValue)} key={letter} />;
           })}
         </div>
       ))}

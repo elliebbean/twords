@@ -29,6 +29,7 @@ export interface GameState {
   boards: BoardState[];
   currentGuess: string;
   error: string | null;
+  score: number;
 }
 
 export type GameAction =
@@ -170,6 +171,7 @@ export function createGame(settings: GameSettings): GameState {
     })),
     currentGuess: "",
     error: null,
+    score: 0,
   };
 }
 

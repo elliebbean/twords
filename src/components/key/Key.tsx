@@ -24,14 +24,32 @@ const KeyButton = styled.button<{ specialKey: boolean }>`
   text-shadow: 0 0 4px black;
 `;
 
-const Letter = styled.div<{ leftColor: string; rightColor: string }>`
+const KeyInner = styled.div`
+  position: relative;
   display: flex;
   width: 100%;
   height: 100%;
   border-radius: 5px;
+  overflow: hidden;
+`;
+
+const Letter = styled.div<{ leftColor: string; rightColor: string }>`
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 100%;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to right, ${(props) => props.leftColor} 50%, ${(props) => props.rightColor} 50%);
+  //background: linear-gradient(to right, ${(props) => props.leftColor} 50%, ${(props) => props.rightColor} 50%);
+`;
+
+const Color = styled.div<{ color: string; position: "left" | "right" }>`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: ${(props) => (props.position === "left" ? "50%" : "-50%")};
+  transition: left 1s;
+  background-color: ${(props) => props.color};
 `;
 
 export default function Key({ letter, results, onPress }: KeyProps) {
@@ -44,9 +62,13 @@ export default function Key({ letter, results, onPress }: KeyProps) {
 
   return (
     <KeyButton specialKey={specialKey} onPointerDown={onPress}>
-      <Letter leftColor={leftColor} rightColor={rightColor}>
-        {letter}
-      </Letter>
+      <KeyInner>
+        <Color position={"left"} color={leftColor} />
+        <Color position={"right"} color={rightColor} />
+        <Letter leftColor={leftColor} rightColor={rightColor}>
+          {letter}
+        </Letter>
+      </KeyInner>
     </KeyButton>
   );
 }

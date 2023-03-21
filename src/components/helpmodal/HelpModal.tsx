@@ -1,4 +1,4 @@
-import Line from "components/line/Line";
+import Line from "components/Line";
 import Modal from "components/modal/Modal";
 import { checkWord } from "services/wordCheck";
 import "./HelpModal.css";

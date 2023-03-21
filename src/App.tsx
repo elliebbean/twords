@@ -1,10 +1,10 @@
 import "App.css";
-import Game from "components/game/Game";
+import Game from "components/Game";
 import Header from "components/header/Header";
 import HelpModal from "components/helpmodal/HelpModal";
 import SettingsModal from "components/settingsmodal/SettingsModal";
 import { SettingsProvider, useSettingsStore } from "hooks/settings";
-import React, { useState } from "react";
+import { useState } from "react";
 import { GameMode } from "services/game";
 
 function App() {

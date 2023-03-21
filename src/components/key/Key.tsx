@@ -9,9 +9,9 @@ function resultToColor(result?: LetterResult) {
   }
 }
 
-const KeyButton = styled.button<{ specialKey: boolean }>`
+const KeyButton = styled.button<{ wide: boolean }>`
   display: inline-flex;
-  flex: ${(props) => (props.specialKey ? 1.5 : 1)} 1;
+  flex: ${(props) => (props.wide ? 1.5 : 1)} 1;
   height: 3.5em;
   border: none;
   margin: 0;
@@ -45,12 +45,12 @@ const Letter = styled.div<{ leftColor: string; rightColor: string }>`
   align-items: center;
 `;
 
-const Color = styled.div<{ color: string; position: "left" | "right"; display: boolean }>`
+const Color = styled.div<{ color: string; position: "left" | "right"; offset: string }>`
   width: 100%;
   height: 100%;
   position: absolute;
-  left: ${(props) => (props.position === "left" ? "" : "-") + (props.display ? "50%" : "100%")};
-  transition: left 1s;
+  right: ${(props) => (props.position === "left" ? "" : "-") + props.offset};
+  transition: right 1s;
   background-color: ${(props) => props.color};
 `;
 
@@ -58,19 +58,40 @@ interface KeyProps {
   letter: string;
   results?: [LetterResult?, LetterResult?];
   onPress: () => void;
+  fill?: "left" | "right";
 }
-
-export default function Key({ letter, results, onPress }: KeyProps) {
+export default function Key({ letter, results, onPress, fill }: KeyProps) {
   const [leftResult, rightResult] = results ?? [];
-  const [leftColor, rightColor] = results?.map(resultToColor) ?? ["#888", "#888"];
+  const [leftColor, rightColor] = results?.map(resultToColor) ?? [];
+
+  let leftOffset = "50%",
+    rightOffset = "50%";
+
+  if (fill) {
+    if (fill === "left") {
+      leftOffset = "0%";
+      rightOffset = "100%";
+    } else {
+      leftOffset = "100%";
+      rightOffset = "0%";
+    }
+  }
+
+  if (leftResult == null) {
+    leftOffset = "100%";
+  }
+
+  if (rightResult == null) {
+    rightOffset = "100%";
+  }
 
   const specialKey = results == null;
 
   return (
-    <KeyButton specialKey={specialKey} onPointerDown={onPress}>
+    <KeyButton wide={specialKey} onPointerDown={onPress}>
       <KeyInner>
-        <Color position={"left"} color={leftColor} display={leftResult != null} />
-        <Color position={"right"} color={rightColor} display={rightResult != null} />
+        <Color position={"left"} color={leftColor} offset={leftOffset} />
+        <Color position={"right"} color={rightColor} offset={rightOffset} />
         <Letter leftColor={leftColor} rightColor={rightColor}>
           {letter}
         </Letter>

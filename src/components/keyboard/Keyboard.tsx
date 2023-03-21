@@ -19,10 +19,11 @@ const specialKeys: { [index: string]: string } = {
 
 interface KeyboardProps {
   letterInfo: Map<string, LetterResult>[];
+  fill?: "left" | "right";
   onKey: (key: string) => void;
 }
 
-function Keyboard({ letterInfo, onKey }: KeyboardProps) {
+function Keyboard({ letterInfo, fill, onKey }: KeyboardProps) {
   const [settings] = useSettings();
 
   const keys = settings.flipKeyboardButtons ? qwertyLayout(Enter, Backspace) : qwertyLayout(Backspace, Enter);
@@ -41,7 +42,7 @@ function Keyboard({ letterInfo, onKey }: KeyboardProps) {
               results = [letterInfo[0]?.get(letter), letterInfo[1]?.get(letter)];
             }
 
-            return <Key letter={letter} results={results} onPress={() => onKey(keyValue)} key={letter} />;
+            return <Key fill={fill} letter={letter} results={results} onPress={() => onKey(keyValue)} key={letter} />;
           })}
         </div>
       ))}

@@ -5,9 +5,12 @@ import "./Board.css";
 interface BoardProps {
   board: BoardState;
   currentGuess: string;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
 }
 
-function Board({ board: { answer, status: gameStatus, guessLimit, previousGuesses }, currentGuess }: BoardProps) {
+function Board({ board, currentGuess, onMouseEnter, onMouseLeave }: BoardProps) {
+  const { answer, status: gameStatus, guessLimit, previousGuesses } = board;
   const lines = previousGuesses.map((guess, i) => <Line key={i} guess={guess} length={answer.length} showResults />);
 
   if (gameStatus === "playing") {
@@ -22,7 +25,11 @@ function Board({ board: { answer, status: gameStatus, guessLimit, previousGuesse
     lines.push(<Line key={lines.length} guess={answer} length={answer.length} failure />);
   }
 
-  return <div className="board">{lines}</div>;
+  return (
+    <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className="board">
+      {lines}
+    </div>
+  );
 }
 
 export default Board;

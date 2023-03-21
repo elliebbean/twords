@@ -1,6 +1,6 @@
 import Board from "components/board/Board";
 import Keyboard from "components/keyboard/Keyboard";
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { GameMode, gameReducer, generateGameSettings, loadOrCreateGame } from "services/game";
 import { saveGame } from "services/localStorage";
 import { getAllLetterResults } from "services/wordCheck";
@@ -12,6 +12,7 @@ interface GameProps {
 }
 
 function Game(props: GameProps) {
+  const [fill, setFill] = useState<"left" | "right" | undefined>();
   const [state, dispatch] = useReducer(gameReducer, generateGameSettings(props.mode), loadOrCreateGame);
 
   useEffect(() => {
@@ -62,13 +63,26 @@ function Game(props: GameProps) {
   return (
     <div className="game">
       <div className="boards">
-        {state.boards.map((board, index) => (
-          <Board key={index} board={board} currentGuess={state.currentGuess} />
-        ))}
+        <Board
+          onMouseEnter={() => setFill("left")}
+          onMouseLeave={() => setFill(undefined)}
+          board={state.boards[0]}
+          currentGuess={state.currentGuess}
+        />
+        <Board
+          onMouseEnter={() => setFill("right")}
+          onMouseLeave={() => setFill(undefined)}
+          board={state.boards[1]}
+          currentGuess={state.currentGuess}
+        />
       </div>
       <p>{message}</p>
       <StatusBar game={state} />
-      <Keyboard onKey={onKey} letterInfo={state.boards.map((board) => getAllLetterResults(board.previousGuesses))} />
+      <Keyboard
+        fill={fill}
+        onKey={onKey}
+        letterInfo={state.boards.map((board) => getAllLetterResults(board.previousGuesses))}
+      />
     </div>
   );
 }

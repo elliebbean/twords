@@ -96,7 +96,11 @@ function Game(props: GameProps) {
       </Boards>
       <p>{message}</p>
       <StatusBar game={state} />
-      <Keyboard onKey={onKey} letterInfo={state.boards.map((board) => getAllLetterResults(board.previousGuesses))} />
+      <Keyboard
+        fill={fill}
+        onKey={onKey}
+        letterInfo={state.boards.map((board) => getAllLetterResults(board.previousGuesses))}
+      />
     </GameDiv>
   );
 }

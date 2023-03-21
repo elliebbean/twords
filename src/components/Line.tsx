@@ -21,12 +21,12 @@ const Letter = styled.div<{ color: string }>`
   aspect-ratio: 1/1;
   justify-content: center;
   align-items: center;
-  //margin: 2px;
   border: 1px solid #555;
   text-transform: uppercase;
   font-size: 2rem;
   font-weight: bold;
   transition: background-color 0.25s ease-in;
+  user-select: none;
 
   @media (max-width: 500px), (max-height: 850px) {
     font-size: 1.25rem;

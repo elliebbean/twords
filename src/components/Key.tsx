@@ -1,10 +1,12 @@
 import { LetterResult } from "services/wordCheck";
 import styled from "styled-components";
 
-interface KeyProps {
-  letter: string;
-  results?: [LetterResult?, LetterResult?];
-  onPress: () => void;
+function resultToColor(result?: LetterResult) {
+  if (result) {
+    return `var(--color-${result})`;
+  } else {
+    return "#5c5c5c";
+  }
 }
 
 const KeyButton = styled.button<{ specialKey: boolean }>`
@@ -31,6 +33,7 @@ const KeyInner = styled.div`
   height: 100%;
   border-radius: 5px;
   overflow: hidden;
+  background-color: #5c5c5c;
 `;
 
 const Letter = styled.div<{ leftColor: string; rightColor: string }>`
@@ -40,31 +43,34 @@ const Letter = styled.div<{ leftColor: string; rightColor: string }>`
   height: 100%;
   justify-content: center;
   align-items: center;
-  //background: linear-gradient(to right, ${(props) => props.leftColor} 50%, ${(props) => props.rightColor} 50%);
 `;
 
-const Color = styled.div<{ color: string; position: "left" | "right" }>`
+const Color = styled.div<{ color: string; position: "left" | "right"; display: boolean }>`
   width: 100%;
   height: 100%;
   position: absolute;
-  left: ${(props) => (props.position === "left" ? "50%" : "-50%")};
+  left: ${(props) => (props.position === "left" ? "" : "-") + (props.display ? "50%" : "100%")};
   transition: left 1s;
   background-color: ${(props) => props.color};
 `;
 
+interface KeyProps {
+  letter: string;
+  results?: [LetterResult?, LetterResult?];
+  onPress: () => void;
+}
+
 export default function Key({ letter, results, onPress }: KeyProps) {
-  const [leftColor, rightColor] = results?.map((result) => (result ? `var(--color-${result})` : "#5c5c5c")) ?? [
-    "#888",
-    "#888",
-  ];
+  const [leftResult, rightResult] = results ?? [];
+  const [leftColor, rightColor] = results?.map(resultToColor) ?? ["#888", "#888"];
 
   const specialKey = results == null;
 
   return (
     <KeyButton specialKey={specialKey} onPointerDown={onPress}>
       <KeyInner>
-        <Color position={"left"} color={leftColor} />
-        <Color position={"right"} color={rightColor} />
+        <Color position={"left"} color={leftColor} display={leftResult != null} />
+        <Color position={"right"} color={rightColor} display={rightResult != null} />
         <Letter leftColor={leftColor} rightColor={rightColor}>
           {letter}
         </Letter>

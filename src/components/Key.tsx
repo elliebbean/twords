@@ -9,9 +9,10 @@ function resultToColor(result?: LetterResult) {
   }
 }
 
-const KeyButton = styled.button<{ wide: boolean }>`
+const KeyButton = styled.button<{ specialKey: boolean }>`
   display: inline-flex;
-  flex: ${(props) => (props.wide ? 1.5 : 1)} 1;
+  flex: ${(props) => (props.specialKey ? 1.5 : 1)} 1;
+
   height: 3.5em;
   border: none;
   margin: 0;
@@ -26,14 +27,14 @@ const KeyButton = styled.button<{ wide: boolean }>`
   text-shadow: 0 0 4px black;
 `;
 
-const KeyInner = styled.div`
+const KeyInner = styled.div<{ specialKey: boolean }>`
   position: relative;
   display: flex;
   width: 100%;
   height: 100%;
   border-radius: 5px;
   overflow: hidden;
-  background-color: #5c5c5c;
+  background-color: ${(props) => (props.specialKey ? "#999" : "#5c5c5c")};
 `;
 
 const Letter = styled.div<{ leftColor: string; rightColor: string }>`
@@ -88,8 +89,8 @@ export default function Key({ letter, results, onPress, fill }: KeyProps) {
   const specialKey = results == null;
 
   return (
-    <KeyButton wide={specialKey} onPointerDown={onPress}>
-      <KeyInner>
+    <KeyButton specialKey={specialKey} onPointerDown={onPress}>
+      <KeyInner specialKey={specialKey}>
         <Color position={"left"} color={leftColor} offset={leftOffset} />
         <Color position={"right"} color={rightColor} offset={rightOffset} />
         <Letter leftColor={leftColor} rightColor={rightColor}>

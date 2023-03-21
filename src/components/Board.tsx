@@ -1,11 +1,28 @@
-import Line from "components/line/Line";
+import Line from "components/Line";
 import { BoardState } from "services/game";
-import "./Board.css";
+import styled from "styled-components";
 
 interface BoardProps {
   board: BoardState;
   currentGuess: string;
 }
+
+const BoardDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 0;
+  max-width: 22rem;
+  transition: box-shadow 0.5s ease;
+
+  @media (max-width: 500px), (max-height: 850px) {
+    max-width: 14rem;
+  }
+
+  :hover {
+    box-shadow: 0 0 10px white;
+  }
+`;
 
 function Board({ board: { answer, status: gameStatus, guessLimit, previousGuesses }, currentGuess }: BoardProps) {
   const lines = previousGuesses.map((guess, i) => <Line key={i} guess={guess} length={answer.length} showResults />);
@@ -22,7 +39,7 @@ function Board({ board: { answer, status: gameStatus, guessLimit, previousGuesse
     lines.push(<Line key={lines.length} guess={answer} length={answer.length} failure />);
   }
 
-  return <div className="board">{lines}</div>;
+  return <BoardDiv>{lines}</BoardDiv>;
 }
 
 export default Board;

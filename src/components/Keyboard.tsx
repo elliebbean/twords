@@ -1,7 +1,7 @@
-import Key from "components/key/Key";
+import Key from "components/Key";
 import { useSettings } from "hooks/settings";
 import { LetterResult } from "services/wordCheck";
-import "./Keyboard.css";
+import styled from "styled-components";
 
 const Backspace = "⌫";
 const Enter = "↩";
@@ -17,6 +17,10 @@ const specialKeys: { [index: string]: string } = {
   [Enter]: "Enter",
 };
 
+const Row = styled.div`
+  display: flex;
+`;
+
 interface KeyboardProps {
   letterInfo: Map<string, LetterResult>[];
   onKey: (key: string) => void;
@@ -30,7 +34,7 @@ function Keyboard({ letterInfo, onKey }: KeyboardProps) {
   return (
     <div className="keyboard">
       {keys.map((row, index) => (
-        <div className="row" key={index}>
+        <Row key={index}>
           {row.map((letter) => {
             let keyValue = letter;
             let results: [LetterResult?, LetterResult?] | undefined = undefined;
@@ -43,7 +47,7 @@ function Keyboard({ letterInfo, onKey }: KeyboardProps) {
 
             return <Key letter={letter} results={results} onPress={() => onKey(keyValue)} key={letter} />;
           })}
-        </div>
+        </Row>
       ))}
     </div>
   );

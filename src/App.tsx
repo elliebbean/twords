@@ -1,7 +1,7 @@
 import "App.css";
 import Game from "components/Game";
 import Header from "components/header/Header";
-import HelpModal from "components/helpmodal/HelpModal";
+import HelpModal from "components/HelpModal";
 import SettingsModal from "components/settingsmodal/SettingsModal";
 import { SettingsProvider, useSettingsStore } from "hooks/settings";
 import { useState } from "react";

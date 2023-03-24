@@ -5,7 +5,7 @@ import { GameMode, gameReducer, generateGameSettings, loadOrCreateGame } from "s
 import { saveGame } from "services/localStorage";
 import { getAllLetterResults } from "services/wordCheck";
 import styled from "styled-components";
-import StatusBar from "./statusbar/StatusBar";
+import StatusBar from "./StatusBar";
 
 interface GameProps {
   mode: GameMode;

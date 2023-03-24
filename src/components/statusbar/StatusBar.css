@@ -1,9 +1,0 @@
-.statusbar {
-  display: flex;
-  justify-content: space-between;
-  margin-block: 0.25rem;
-}
-
-.statusbar p {
-  display: inline-block;
-}

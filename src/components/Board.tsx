@@ -5,28 +5,19 @@ import styled from "styled-components";
 interface BoardProps {
   board: BoardState;
   currentGuess: string;
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
+  selected?: boolean;
 }
 
-const BoardDiv = styled.div`
+const BoardDiv = styled.div<{ selected?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 4px;
-  flex: 1 0;
-  max-width: 22rem;
-  transition: box-shadow 0.5s ease;
-
-  @media (max-width: 500px), (max-height: 850px) {
-    max-width: 14rem;
-  }
-
-  :hover {
-    box-shadow: 0 0 10px white;
-  }
+  transition: box-shadow 0.5s ease, opacity 0.5s ease;
+  box-shadow: 0 0 ${({ selected }) => (selected ? "10px" : "")} rgba(255, 255, 255, 0.5);
+  opacity: ${({ selected }) => (selected !== undefined && !selected ? "0.7" : "1")};
 `;
 
-function Board({ board, currentGuess, onMouseEnter, onMouseLeave }: BoardProps) {
+function Board({ board, currentGuess, selected }: BoardProps) {
   const { answer, status: gameStatus, guessLimit, previousGuesses } = board;
   const lines = previousGuesses.map((guess, i) => <Line key={i} guess={guess} length={answer.length} showResults />);
 
@@ -42,11 +33,7 @@ function Board({ board, currentGuess, onMouseEnter, onMouseLeave }: BoardProps) 
     lines.push(<Line key={lines.length} guess={answer} length={answer.length} failure />);
   }
 
-  return (
-    <BoardDiv onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-      {lines}
-    </BoardDiv>
-  );
+  return <BoardDiv selected={selected}>{lines}</BoardDiv>;
 }
 
 export default Board;

@@ -25,6 +25,7 @@ const KeyButton = styled.button<{ specialKey: boolean }>`
   font-weight: bold;
   text-transform: uppercase;
   text-shadow: 0 0 4px black;
+  cursor: pointer;
 `;
 
 const KeyInner = styled.div<{ specialKey: boolean }>`

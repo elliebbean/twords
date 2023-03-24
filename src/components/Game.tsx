@@ -29,8 +29,17 @@ const Boards = styled.div`
   margin: 0.4rem;
 `;
 
+const BoardWrapper = styled.div`
+  flex: 1 0;
+  max-width: 22rem;
+
+  @media (max-width: 500px), (max-height: 850px) {
+    max-width: 14rem;
+  }
+`;
+
 function Game(props: GameProps) {
-  const [fill, setFill] = useState<"left" | "right" | undefined>();
+  const [selectedBoard, setSelectedBoard] = useState<"left" | "right" | undefined>();
   const [state, dispatch] = useReducer(gameReducer, generateGameSettings(props.mode), loadOrCreateGame);
 
   useEffect(() => {
@@ -81,23 +90,26 @@ function Game(props: GameProps) {
   return (
     <GameDiv>
       <Boards>
-        <Board
-          onMouseEnter={() => setFill("left")}
-          onMouseLeave={() => setFill(undefined)}
-          board={state.boards[0]}
-          currentGuess={state.currentGuess}
-        />
-        <Board
-          onMouseEnter={() => setFill("right")}
-          onMouseLeave={() => setFill(undefined)}
-          board={state.boards[1]}
-          currentGuess={state.currentGuess}
-        />
+        {(["left", "right"] as const).map((side, index) => (
+          <BoardWrapper
+            onPointerEnter={(event) => event.pointerType === "mouse" && setSelectedBoard(side)}
+            onPointerLeave={(event) => event.pointerType === "mouse" && setSelectedBoard(undefined)}
+            onPointerDown={(event) => event.pointerType !== "mouse" && setSelectedBoard(side)}
+            onPointerUp={(event) => event.pointerType !== "mouse" && setSelectedBoard(undefined)}
+          >
+            <Board
+              board={state.boards[index]}
+              currentGuess={state.currentGuess}
+              selected={selectedBoard === undefined ? undefined : selectedBoard === side}
+              key={side}
+            />
+          </BoardWrapper>
+        ))}
       </Boards>
       <p>{message}</p>
       <StatusBar game={state} />
       <Keyboard
-        fill={fill}
+        fill={selectedBoard}
         onKey={onKey}
         letterInfo={state.boards.map((board) => getAllLetterResults(board.previousGuesses))}
       />

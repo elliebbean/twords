@@ -53,7 +53,7 @@ function Game(props: GameProps) {
       if (key === "Enter") {
         if (state.status === "playing") {
           dispatch({ type: "submit" });
-        } else if (props.mode !== "daily") {
+        } else if (props.mode !== "daily" && props.mode !== "endless") {
           dispatch({ type: "restart", settings: generateGameSettings(props.mode) });
         }
       } else if (key === "Backspace") {
@@ -82,9 +82,9 @@ function Game(props: GameProps) {
   if (state.error) {
     message = state.error;
   } else if (state.status === "won") {
-    message = "Congratulations, you won!" + (props.mode === "daily" ? "" : " Press enter to play again.");
+    message = "Congratulations, you won!" + (props.mode === "random" ? " Press enter to play again." : "");
   } else if (state.status === "lost") {
-    message = "Sorry, you lost." + (props.mode === "daily" ? "" : " Press enter to play again.");
+    message = "Sorry, you lost." + (props.mode === "random" ? " Press enter to play again." : "");
   }
 
   return (

@@ -1,5 +1,6 @@
 import Board from "components/Board";
 import Keyboard from "components/Keyboard";
+import { useStoredState } from "hooks/storedState";
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { GameMode, gameReducer, generateGameSettings, loadOrCreateGame } from "services/game";
 import { saveGame } from "services/localStorage";
@@ -41,10 +42,15 @@ const BoardWrapper = styled.div`
 function Game(props: GameProps) {
   const [selectedBoard, setSelectedBoard] = useState<"left" | "right" | undefined>();
   const [state, dispatch] = useReducer(gameReducer, generateGameSettings(props.mode), loadOrCreateGame);
+  const [highScore, setHighScore] = useStoredState<number>(`high-score-${props.mode}`, 0);
 
   useEffect(() => {
     saveGame(state);
-  }, [state]);
+
+    if (state.score > highScore) {
+      setHighScore(state.score);
+    }
+  }, [state, highScore, setHighScore]);
 
   // We don't want to be removing/adding the keyboard listener every render, that could cause dropped inputs
   // So store the onKey handler as a callback, then we only have to re-run the effect when the game status changes.
@@ -53,7 +59,7 @@ function Game(props: GameProps) {
       if (key === "Enter") {
         if (state.status === "playing") {
           dispatch({ type: "submit" });
-        } else if (props.mode !== "daily") {
+        } else if (props.mode === "random") {
           dispatch({ type: "restart", settings: generateGameSettings(props.mode) });
         }
       } else if (key === "Backspace") {
@@ -82,9 +88,9 @@ function Game(props: GameProps) {
   if (state.error) {
     message = state.error;
   } else if (state.status === "won") {
-    message = "Congratulations, you won!" + (props.mode === "daily" ? "" : " Press enter to play again.");
+    message = "Congratulations, you won!" + (props.mode === "random" ? " Press enter to play again." : "");
   } else if (state.status === "lost") {
-    message = "Sorry, you lost." + (props.mode === "daily" ? "" : " Press enter to play again.");
+    message = "Sorry, you lost." + (props.mode === "random" ? " Press enter to play again." : "");
   }
 
   return (
@@ -96,18 +102,20 @@ function Game(props: GameProps) {
             onPointerLeave={(event) => event.pointerType === "mouse" && setSelectedBoard(undefined)}
             onPointerDown={(event) => event.pointerType !== "mouse" && setSelectedBoard(side)}
             onPointerUp={(event) => event.pointerType !== "mouse" && setSelectedBoard(undefined)}
+            key={side}
           >
             <Board
               board={state.boards[index]}
               currentGuess={state.currentGuess}
               selected={selectedBoard === undefined ? undefined : selectedBoard === side}
               key={side}
+              gameStatus={state.status}
             />
           </BoardWrapper>
         ))}
       </Boards>
       <p>{message}</p>
-      <StatusBar game={state} />
+      <StatusBar highScore={highScore} game={state} />
       <Keyboard
         fill={selectedBoard}
         onKey={onKey}

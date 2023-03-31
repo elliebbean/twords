@@ -107,6 +107,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
         if (state.currentGuess === board.answer) {
           if (state.mode === "endless") {
+            newBoard.guessLimit = 6;
             newBoard.answer = random.nextElement(validAnswers[newBoard.answer.length]!);
             newBoard.previousGuesses = [checkWord(state.currentGuess, newBoard.answer)];
             newScore += 1;

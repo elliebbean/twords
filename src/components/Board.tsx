@@ -1,11 +1,12 @@
 import Line from "components/Line";
-import { BoardState } from "services/game";
+import { BoardState, GameStatus } from "services/game";
 import styled from "styled-components";
 
 interface BoardProps {
   board: BoardState;
   currentGuess: string;
   selected?: boolean;
+  gameStatus?: GameStatus;
 }
 
 const BoardDiv = styled.div<{ selected?: boolean }>`
@@ -17,11 +18,13 @@ const BoardDiv = styled.div<{ selected?: boolean }>`
   opacity: ${({ selected }) => (selected !== undefined && !selected ? "0.7" : "1")};
 `;
 
-function Board({ board, currentGuess, selected }: BoardProps) {
-  const { answer, status: gameStatus, guessLimit, previousGuesses } = board;
+function Board({ board, currentGuess, selected, gameStatus }: BoardProps) {
+  const { answer, status: boardStatus, guessLimit, previousGuesses } = board;
   const lines = previousGuesses.map((guess, i) => <Line key={i} guess={guess} length={answer.length} showResults />);
 
-  if (gameStatus === "playing") {
+  const status = gameStatus ?? boardStatus;
+
+  if (status === "playing") {
     lines.push(<Line key={lines.length} guess={currentGuess} length={answer.length} />);
   }
 
@@ -29,7 +32,7 @@ function Board({ board, currentGuess, selected }: BoardProps) {
     lines.push(<Line key={i} guess={[]} length={answer.length} />);
   }
 
-  if (gameStatus === "lost") {
+  if (status === "lost") {
     lines.push(<Line key={lines.length} guess={answer} length={answer.length} failure />);
   }
 

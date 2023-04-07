@@ -44,6 +44,7 @@ const validAnswers: { [index: number]: string[] | undefined } = _validAnswers;
 // Seperate seeds for daily/random games so you can't reproduce a daily game just by entering a specific seed
 // (that's unlikely to ever matter, but we need to fill the second part of the seed with something anyway)
 const dailySeed = 0xda7e;
+const endlessSeed = 0xe9d1;
 const randomSeed = 0x5eed;
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
@@ -151,7 +152,7 @@ const wordLengthProbabilities: { [index: number]: number | undefined } = {
 };
 
 export function createGame(settings: GameSettings): GameState {
-  const seedPrefix = settings.mode === "daily" ? dailySeed : randomSeed;
+  const seedPrefix = settings.mode === "daily" ? dailySeed : settings.mode === "endless" ? endlessSeed : randomSeed;
   const random = new Random(seedPrefix, settings.seed);
 
   const wordLengths = Object.keys(validAnswers).map((key) => parseInt(key));
@@ -197,8 +198,8 @@ export function generateGameSettings(mode: GameMode): GameSettings {
   const settings = { mode };
   switch (mode) {
     case "random":
+      return { ...settings, seed: Random.randomSeed() };
     case "endless":
-      return { ...settings, seed: currentDailySeed() };
     case "daily":
       return { ...settings, seed: currentDailySeed() };
   }

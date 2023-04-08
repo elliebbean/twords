@@ -15,7 +15,7 @@ const BoardDiv = styled.div<{ selected?: boolean }>`
   gap: 4px;
   transition: box-shadow 0.5s ease, opacity 0.5s ease;
   box-shadow: 0 0 ${({ selected }) => (selected ? "10px" : "")} rgba(255, 255, 255, 0.5);
-  opacity: ${({ selected }) => (selected !== undefined && !selected ? "0.7" : "1")};
+  opacity: ${({ selected }) => (selected !== undefined && !selected ? "0.5" : "1")};
 `;
 
 function Board({ board, currentGuess, selected, gameStatus }: BoardProps) {

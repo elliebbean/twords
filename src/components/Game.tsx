@@ -40,9 +40,12 @@ const BoardWrapper = styled.div`
 `;
 
 function Game(props: GameProps) {
-  const [selectedBoard, setSelectedBoard] = useState<"left" | "right" | undefined>();
+  const [hoveredBoard, setHoveredBoard] = useState<"left" | "right" | undefined>();
+  const [clickedBoard, setClickedBoard] = useState<"left" | "right" | undefined>();
   const [state, dispatch] = useReducer(gameReducer, generateGameSettings(props.mode), loadOrCreateGame);
   const [highScore, setHighScore] = useStoredState<number>(`high-score-${props.mode}`, 0);
+
+  const selectedBoard = clickedBoard ?? hoveredBoard;
 
   useEffect(() => {
     saveGame(state);
@@ -95,13 +98,15 @@ function Game(props: GameProps) {
 
   return (
     <GameDiv>
-      <Boards>
+      <Boards onClick={() => setClickedBoard(undefined)}>
         {(["left", "right"] as const).map((side, index) => (
           <BoardWrapper
-            onPointerEnter={(event) => event.pointerType === "mouse" && setSelectedBoard(side)}
-            onPointerLeave={(event) => event.pointerType === "mouse" && setSelectedBoard(undefined)}
-            onPointerDown={(event) => event.pointerType !== "mouse" && setSelectedBoard(side)}
-            onPointerUp={(event) => event.pointerType !== "mouse" && setSelectedBoard(undefined)}
+            onPointerEnter={(event) => event.pointerType === "mouse" && setHoveredBoard(side)}
+            onPointerLeave={(event) => event.pointerType === "mouse" && setHoveredBoard(undefined)}
+            onClick={(event) => {
+              setClickedBoard(clickedBoard === side ? undefined : side);
+              event.stopPropagation();
+            }}
             key={side}
           >
             <Board

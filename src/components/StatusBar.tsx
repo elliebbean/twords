@@ -1,5 +1,5 @@
 import ShareButton from "components/sharebutton/ShareButton";
-import { describeSeed, GameMode, GameState } from "services/game";
+import { describeSeed, GameState } from "services/game";
 import styled from "styled-components";
 
 interface StatusBarProps {
@@ -17,21 +17,21 @@ const StatusBarItem = styled.p`
   display: inline-block;
 `;
 
-const LinkList = styled.ul`
-  display: inline;
-  margin: 0;
-`;
+// const LinkList = styled.ul`
+//   display: inline;
+//   margin: 0;
+// `;
 
-const LinkListItem = styled.li`
-  display: inline;
+// const LinkListItem = styled.li`
+//   display: inline;
 
-  :not(:first-child)::before {
-    content: " | ";
-  }
-`;
+//   :not(:first-child)::before {
+//     content: " | ";
+//   }
+// `;
 
 function StatusBar({ game, highScore }: StatusBarProps) {
-  const links: GameMode[] = (["daily", "random", "endless"] as const).filter((mode) => mode !== game.mode);
+  //const links: GameMode[] = (["daily", "random", "endless"] as const).filter((mode) => mode !== game.mode);
 
   return (
     <StatusBarDiv>
@@ -45,13 +45,13 @@ function StatusBar({ game, highScore }: StatusBarProps) {
       ) : (
         <ShareButton game={game} />
       )}
-      <LinkList>
+      {/*<LinkList>
         {links.map((link) => (
           <LinkListItem key={link}>
             <a href={`/?${link}`}>{link}</a>
           </LinkListItem>
         ))}
-      </LinkList>
+        </LinkList>*/}
     </StatusBarDiv>
   );
 }

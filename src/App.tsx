@@ -14,11 +14,13 @@ function App() {
   const [settings, setSettings] = useSettingsStore();
 
   const searchParams = new URLSearchParams(window.location.search);
-  let gameMode: GameMode = "daily";
+  let gameMode: GameMode = "endless";
   if (searchParams.has("random")) {
     gameMode = "random";
   } else if (searchParams.has("endless")) {
     gameMode = "endless";
+  } else if (searchParams.has("daily")) {
+    gameMode = "daily";
   }
 
   return (

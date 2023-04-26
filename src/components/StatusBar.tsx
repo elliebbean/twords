@@ -17,41 +17,19 @@ const StatusBarItem = styled.p`
   display: inline-block;
 `;
 
-// const LinkList = styled.ul`
-//   display: inline;
-//   margin: 0;
-// `;
-
-// const LinkListItem = styled.li`
-//   display: inline;
-
-//   :not(:first-child)::before {
-//     content: " | ";
-//   }
-// `;
-
 function StatusBar({ game, highScore }: StatusBarProps) {
-  //const links: GameMode[] = (["daily", "random", "endless"] as const).filter((mode) => mode !== game.mode);
-
   return (
     <StatusBarDiv>
       <StatusBarItem>
-        {game.mode} {describeSeed(game.seed, game.mode)}
+        {game.settings.mode !== "endless" ? game.settings.mode : ""} {describeSeed(game.settings)}
       </StatusBarItem>
-      {game.mode === "endless" ? (
+      {game.settings.endless ? (
         <StatusBarItem>
           Score: {game.score} (Highest: {highScore})
         </StatusBarItem>
       ) : (
         <ShareButton game={game} />
       )}
-      {/*<LinkList>
-        {links.map((link) => (
-          <LinkListItem key={link}>
-            <a href={`/?${link}`}>{link}</a>
-          </LinkListItem>
-        ))}
-        </LinkList>*/}
     </StatusBarDiv>
   );
 }

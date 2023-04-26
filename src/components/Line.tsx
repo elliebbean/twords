@@ -6,6 +6,7 @@ interface LineProps {
   length: number;
   showResults?: boolean;
   failure?: boolean;
+  fragile?: boolean;
 }
 
 const LineContiner = styled.div`
@@ -14,14 +15,14 @@ const LineContiner = styled.div`
   gap: 4px;
 `;
 
-const Letter = styled.div<{ color: string }>`
+const Letter = styled.div<{ color: string; dashed: boolean }>`
   background-color: ${(props) => props.color};
   display: inline-flex;
   flex: 1 1;
   aspect-ratio: 1/1;
   justify-content: center;
   align-items: center;
-  border: 1px solid #555;
+  border: 1px ${(props) => (props.dashed ? "dashed" : "solid")} #555;
   text-transform: uppercase;
   font-size: 2rem;
   font-weight: bold;
@@ -34,7 +35,7 @@ const Letter = styled.div<{ color: string }>`
 `;
 
 function Line(props: LineProps) {
-  const { guess, length, showResults, failure } = props;
+  const { guess, length, showResults, failure, fragile } = props;
 
   const letters = [...Array(length)].map((_, i) => {
     let guessLetter = "";
@@ -57,7 +58,7 @@ function Line(props: LineProps) {
     }
 
     return (
-      <Letter color={color} key={i}>
+      <Letter color={color} dashed={fragile ?? false} key={i}>
         {guessLetter}
       </Letter>
     );

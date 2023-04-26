@@ -9,21 +9,23 @@ export type GameMode = "daily" | "random" | "endless";
 export type GameStatus = "playing" | "won" | "lost";
 
 export interface GameSettings {
-  mode: GameMode;
   seed: number;
+  mode: GameMode;
+  endless: boolean;
+  daily: boolean;
 }
 
 export interface BoardState {
   status: GameStatus;
   answer: string;
   guessLimit: number;
+  minGuesses: number;
   freeGuesses: number;
   previousGuesses: CheckedWord[];
 }
 
 export interface GameState {
-  mode: GameMode;
-  seed: number;
+  settings: GameSettings;
   randomState: RandomState;
   status: GameStatus;
   boards: BoardState[];
@@ -107,8 +109,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         newBoard.previousGuesses = [...board.previousGuesses, checkWord(state.currentGuess, board.answer)];
 
         if (state.currentGuess === board.answer) {
-          if (state.mode === "endless") {
-            newBoard.guessLimit = 6;
+          if (state.settings.endless) {
+            if (newBoard.previousGuesses.length > newBoard.minGuesses) {
+              newBoard.guessLimit -= 1;
+            }
             newBoard.answer = random.nextElement(validAnswers[newBoard.answer.length]!);
             newBoard.previousGuesses = [checkWord(state.currentGuess, newBoard.answer)];
             newScore += 1;
@@ -152,7 +156,18 @@ const wordLengthProbabilities: { [index: number]: number | undefined } = {
 };
 
 export function createGame(settings: GameSettings): GameState {
-  const seedPrefix = settings.mode === "daily" ? dailySeed : settings.mode === "endless" ? endlessSeed : randomSeed;
+  let seedPrefix;
+
+  if (settings.daily) {
+    if (settings.endless) {
+      seedPrefix = endlessSeed;
+    } else {
+      seedPrefix = dailySeed;
+    }
+  } else {
+    seedPrefix = randomSeed;
+  }
+
   const random = new Random(seedPrefix, settings.seed);
 
   const wordLengths = Object.keys(validAnswers).map((key) => parseInt(key));
@@ -164,12 +179,13 @@ export function createGame(settings: GameSettings): GameState {
   const freeGuess = random.nextElement(validAnswers[wordLength]!.filter((word) => !answers.includes(word)));
 
   return {
-    ...settings,
+    settings,
     status: "playing",
     randomState: random.getState(),
     boards: answers.map((answer) => ({
       answer,
       guessLimit: 7,
+      minGuesses: settings.endless ? 6 : 7,
       freeGuesses: 1,
       status: "playing",
       previousGuesses: [checkWord(freeGuess, answer)],
@@ -183,11 +199,11 @@ export function createGame(settings: GameSettings): GameState {
 export function loadOrCreateGame(settings: GameSettings): GameState {
   const savedGame = loadGame(settings.mode);
 
-  if (!savedGame) {
+  if (!savedGame || !savedGame.settings || !savedGame.settings.seed || !savedGame.status) {
     return createGame(settings);
-  } else if ((settings.mode === "daily" || settings.mode === "endless") && savedGame.seed === settings.seed) {
+  } else if (settings.daily && savedGame.settings.seed === settings.seed) {
     return savedGame;
-  } else if (settings.mode === "random" && savedGame.status === "playing") {
+  } else if (!settings.daily && savedGame.status === "playing") {
     return savedGame;
   } else {
     return createGame(settings);
@@ -198,10 +214,11 @@ export function generateGameSettings(mode: GameMode): GameSettings {
   const settings = { mode };
   switch (mode) {
     case "random":
-      return { ...settings, seed: Random.randomSeed() };
+      return { ...settings, daily: false, endless: true, seed: Random.randomSeed() };
     case "endless":
+      return { ...settings, daily: true, endless: true, seed: currentDailySeed() };
     case "daily":
-      return { ...settings, seed: currentDailySeed() };
+      return { ...settings, daily: true, endless: false, seed: currentDailySeed() };
   }
 }
 
@@ -217,11 +234,11 @@ export function seedToDate(seed: number): Date {
   return new Date(seed * 1000 * 60 * 60 * 24);
 }
 
-export function describeSeed(seed: number, mode: GameMode) {
-  if (mode === "daily" || mode === "endless") {
-    return seedToDate(seed).toLocaleDateString();
+export function describeSeed(settings: GameSettings) {
+  if (settings.daily) {
+    return seedToDate(settings.seed).toLocaleDateString();
   } else {
-    return "#" + seed.toString(36);
+    return "#" + settings.seed.toString(36);
   }
 }
 
@@ -239,7 +256,7 @@ function resultToEmoji(result: LetterResult): string {
 export function describeGameWithEmoji(game: GameState): string {
   let description: string[] = [];
 
-  description.push(`two|rds ${game.mode} ${describeSeed(game.seed, game.mode)}`);
+  description.push(`two|rds ${game.settings.mode} ${describeSeed(game.settings)}`);
 
   const scores = game.boards
     .map((board) => (board.status === "won" ? board.previousGuesses.length - board.freeGuesses : "X"))
@@ -273,7 +290,7 @@ export function describeGameWithEmoji(game: GameState): string {
     description.push(currentRowDescriptions.join("\u2003"));
   }
 
-  const url = window.location.origin + "/?" + game.mode;
+  const url = window.location.origin + "/?" + game.settings.mode;
   description.push(url);
 
   return description.join("\n");

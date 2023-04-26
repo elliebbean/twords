@@ -13,5 +13,5 @@ export function loadGame(gameMode: GameMode): GameState | undefined {
 }
 
 export function saveGame(gameState: GameState) {
-  localStorage.setItem(gameStatePrefix + gameState.mode, JSON.stringify(gameState));
+  localStorage.setItem(gameStatePrefix + gameState.settings.mode, JSON.stringify(gameState));
 }

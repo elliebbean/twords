@@ -98,12 +98,13 @@ function Game(props: GameProps) {
 
   return (
     <GameDiv>
-      <Boards onClick={() => setClickedBoard(undefined)}>
+      <Boards onPointerDown={() => setClickedBoard(undefined)}>
         {(["left", "right"] as const).map((side, index) => (
           <BoardWrapper
             onPointerEnter={(event) => event.pointerType === "mouse" && setHoveredBoard(side)}
             onPointerLeave={(event) => event.pointerType === "mouse" && setHoveredBoard(undefined)}
-            onClick={(event) => {
+            onPointerDown={(event) => {
+              console.log("onPointerDown");
               setClickedBoard(clickedBoard === side ? undefined : side);
               event.stopPropagation();
             }}

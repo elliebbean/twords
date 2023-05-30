@@ -30,6 +30,7 @@ export interface GameState {
   status: GameStatus;
   boards: BoardState[];
   currentGuess: string;
+  previousAnswers: string[];
   error: string | null;
   score: number;
 }
@@ -50,8 +51,6 @@ const endlessSeed = 0xe9d1;
 const randomSeed = 0x5eed;
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
-  const random = new Random(state.randomState);
-
   switch (action.type) {
     case "letter": {
       if (state.status !== "playing") {
@@ -81,72 +80,88 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case "submit": {
-      let newScore = state.score;
-      if (state.status !== "playing") {
-        return state;
-      }
-
-      if (!state.boards.map((board) => board.answer.length).includes(state.currentGuess.length)) {
-        return {
-          ...state,
-          error: "Too short",
-        };
-      }
-
-      if (!validWords[state.currentGuess.length]?.includes(state.currentGuess)) {
-        return {
-          ...state,
-          error: "Invalid guess",
-        };
-      }
-
-      const newBoards = state.boards.map((board) => {
-        if (board.status !== "playing") {
-          return board;
-        }
-
-        const newBoard = { ...board };
-        newBoard.previousGuesses = [...board.previousGuesses, checkWord(state.currentGuess, board.answer)];
-
-        if (state.currentGuess === board.answer) {
-          if (state.settings.endless) {
-            if (newBoard.previousGuesses.length > newBoard.minGuesses) {
-              newBoard.guessLimit -= 1;
-            }
-            newBoard.answer = random.nextElement(validAnswers[newBoard.answer.length]!);
-            newBoard.previousGuesses = [checkWord(state.currentGuess, newBoard.answer)];
-            newScore += 1;
-          } else {
-            newBoard.status = "won";
-          }
-        } else if (newBoard.previousGuesses.length >= newBoard.guessLimit) {
-          newBoard.status = "lost";
-        }
-
-        return newBoard;
-      });
-
-      let newGameState: GameStatus = state.status;
-      if (newBoards.every((board) => board.status === "won")) {
-        newGameState = "won";
-      } else if (newBoards.some((board) => board.status === "lost")) {
-        newGameState = "lost";
-      }
-      return {
-        ...state,
-        randomState: random.getState(),
-        status: newGameState,
-        boards: newBoards,
-        currentGuess: "",
-        error: null,
-        score: newScore,
-      };
+      return submit(state);
     }
 
     case "restart": {
       return createGame(action.settings);
     }
   }
+}
+
+function submit(state: GameState): GameState {
+  const random = new Random(state.randomState);
+  const previousAnswers = new Set(state.previousAnswers);
+  let newScore = state.score;
+
+  if (state.status !== "playing") {
+    return state;
+  }
+
+  if (!state.boards.map((board) => board.answer.length).includes(state.currentGuess.length)) {
+    return {
+      ...state,
+      error: "Too short",
+    };
+  }
+
+  if (!validWords[state.currentGuess.length]?.includes(state.currentGuess)) {
+    return {
+      ...state,
+      error: "Invalid guess",
+    };
+  }
+
+  const newBoards = state.boards.map((board) => {
+    if (board.status !== "playing") {
+      return board;
+    }
+
+    const newBoard = { ...board };
+    const answer = newBoard.answer;
+    newBoard.previousGuesses = [...board.previousGuesses, checkWord(state.currentGuess, board.answer)];
+
+    if (state.currentGuess === board.answer) {
+      if (state.settings.endless) {
+        if (newBoard.previousGuesses.length > newBoard.minGuesses) {
+          newBoard.guessLimit -= 1;
+        }
+        newBoard.previousGuesses = [checkWord(state.currentGuess, answer)];
+
+        let newAnswer;
+        do {
+          newAnswer = random.nextElement(validAnswers[answer.length]!);
+        } while (previousAnswers.has(newAnswer));
+
+        newBoard.answer = newAnswer;
+        previousAnswers.add(newAnswer);
+        newScore += 1;
+      } else {
+        newBoard.status = "won";
+      }
+    } else if (newBoard.previousGuesses.length >= newBoard.guessLimit) {
+      newBoard.status = "lost";
+    }
+
+    return newBoard;
+  });
+
+  let newGameState: GameStatus = state.status;
+  if (newBoards.every((board) => board.status === "won")) {
+    newGameState = "won";
+  } else if (newBoards.some((board) => board.status === "lost")) {
+    newGameState = "lost";
+  }
+  return {
+    ...state,
+    randomState: random.getState(),
+    status: newGameState,
+    boards: newBoards,
+    currentGuess: "",
+    error: null,
+    score: newScore,
+    previousAnswers: [...previousAnswers],
+  };
 }
 
 // How likely we are to pick a word of different lengths
@@ -190,6 +205,7 @@ export function createGame(settings: GameSettings): GameState {
       status: "playing",
       previousGuesses: [checkWord(freeGuess, answer)],
     })),
+    previousAnswers: answers,
     currentGuess: "",
     error: null,
     score: 0,

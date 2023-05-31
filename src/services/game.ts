@@ -126,13 +126,13 @@ function submit(state: GameState): GameState {
         if (newBoard.previousGuesses.length > newBoard.minimumGuessLimit) {
           newBoard.guessLimit -= 1;
         }
-        newBoard.previousGuesses = [checkWord(state.currentGuess, answer)];
 
         let newAnswer;
         do {
           newAnswer = random.nextElement(validAnswers[answer.length]!);
         } while (previousAnswers.has(newAnswer));
 
+        newBoard.previousGuesses = [checkWord(state.currentGuess, newAnswer)];
         newBoard.answer = newAnswer;
         previousAnswers.add(newAnswer);
         newScore += 1;

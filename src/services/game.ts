@@ -19,7 +19,7 @@ export interface BoardState {
   status: GameStatus;
   answer: string;
   guessLimit: number;
-  minGuesses: number;
+  minimumGuessLimit: number;
   freeGuesses: number;
   previousGuesses: CheckedWord[];
 }
@@ -123,7 +123,7 @@ function submit(state: GameState): GameState {
 
     if (state.currentGuess === board.answer) {
       if (state.settings.endless) {
-        if (newBoard.previousGuesses.length > newBoard.minGuesses) {
+        if (newBoard.previousGuesses.length > newBoard.minimumGuessLimit) {
           newBoard.guessLimit -= 1;
         }
         newBoard.previousGuesses = [checkWord(state.currentGuess, answer)];
@@ -200,7 +200,7 @@ export function createGame(settings: GameSettings): GameState {
     boards: answers.map((answer) => ({
       answer,
       guessLimit: 7,
-      minGuesses: settings.endless ? 6 : 7,
+      minimumGuessLimit: 5,
       freeGuesses: 1,
       status: "playing",
       previousGuesses: [checkWord(freeGuess, answer)],

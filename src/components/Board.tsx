@@ -19,19 +19,24 @@ const BoardDiv = styled.div<{ selected?: boolean }>`
 `;
 
 function Board({ board, currentGuess, selected, gameStatus }: BoardProps) {
-  const { answer, status: boardStatus, guessLimit, minGuesses, previousGuesses } = board;
+  const { answer, status: boardStatus, guessLimit, minimumGuessLimit, previousGuesses } = board;
   const lines = previousGuesses.map((guess, i) => <Line key={i} guess={guess} length={answer.length} showResults />);
 
   const status = gameStatus ?? boardStatus;
 
   if (status === "playing") {
     lines.push(
-      <Line key={lines.length} guess={currentGuess} length={answer.length} fragile={lines.length >= minGuesses} />
+      <Line
+        key={lines.length}
+        guess={currentGuess}
+        length={answer.length}
+        fragile={lines.length >= minimumGuessLimit}
+      />
     );
   }
 
   for (let i = lines.length; i < guessLimit; i++) {
-    lines.push(<Line key={i} guess={[]} length={answer.length} fragile={i >= minGuesses} />);
+    lines.push(<Line key={i} guess={[]} length={answer.length} fragile={i >= minimumGuessLimit} />);
   }
 
   if (status === "lost") {

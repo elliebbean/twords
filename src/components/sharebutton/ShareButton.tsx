@@ -1,4 +1,5 @@
-import { describeGameWithEmoji, GameState } from "services/game";
+import { useState } from "react";
+import { GameState } from "services/game";
 import "./ShareButton.css";
 
 interface ShareButtonProps {
@@ -6,11 +7,20 @@ interface ShareButtonProps {
 }
 
 function ShareButton({ game }: ShareButtonProps) {
+  const [disabled, setDisabled] = useState(false);
   const share = () => {
-    navigator.clipboard.writeText(describeGameWithEmoji(game));
+    const text = `I scored ${game.score} in today's two|rds!\n` + window.location.href;
+
+    navigator.clipboard.writeText(text);
+    setDisabled(true);
+    setTimeout(() => {
+      setDisabled(false);
+    }, 2000);
   };
 
-  return game.status !== "playing" ? (
+  return disabled ? (
+    <>Copied to clipboard!</>
+  ) : (
     <button
       className="share"
       onClick={(e) => {
@@ -18,10 +28,8 @@ function ShareButton({ game }: ShareButtonProps) {
         share();
       }}
     >
-      share results to clipboard
+      share
     </button>
-  ) : (
-    <></>
   );
 }
 

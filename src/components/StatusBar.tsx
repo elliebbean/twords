@@ -23,12 +23,16 @@ function StatusBar({ game, highScore }: StatusBarProps) {
       <StatusBarItem>
         {game.settings.mode !== "endless" ? game.settings.mode : ""} {describeSeed(game.settings)}
       </StatusBarItem>
-      {game.settings.endless ? (
+      {game.settings.endless && (
         <StatusBarItem>
           Score: {game.score} (Highest: {highScore})
+          {game.status !== "playing" && (
+            <>
+              {" "}
+              - <ShareButton game={game} />
+            </>
+          )}
         </StatusBarItem>
-      ) : (
-        <ShareButton game={game} />
       )}
     </StatusBarDiv>
   );

@@ -17,9 +17,15 @@ body,
 }
 
 body {
-  font-family: "geologica", sans-serif;
   background: #202027;
   color: #cccccc;
+}
+
+body,
+input,
+button,
+textarea {
+  font-family: "geologica", sans-serif;
 }
 
 h1,

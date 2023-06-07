@@ -17,9 +17,7 @@ header > :last-child {
 }
 
 header h1 {
-  font-variant: small-caps;
   margin: 0;
-  line-height: 2rem;
 }
 
 header .icon {

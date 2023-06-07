@@ -11,7 +11,7 @@ function Header(props: HeaderProps) {
   return (
     <header>
       <div></div>
-      <h1>two|rds</h1>
+      <h1>TWO|RDS</h1>
       <div>
         <IconButton label={"Help"} onClick={props.onHelpButton}>
           <HelpIcon />

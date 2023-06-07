@@ -13,7 +13,7 @@ button.icon-button svg {
   border-radius: 50%;
 }
 
-button.icon-button:focus svg,
+button.icon-button:focus-visible svg,
 button.icon-button:hover svg {
   fill: #333;
   background: #ccc;

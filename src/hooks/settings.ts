@@ -5,6 +5,7 @@ export interface Settings {
   darkTheme?: boolean;
   highContrast?: boolean;
   flipKeyboardButtons?: boolean;
+  helpViewed?: boolean;
 }
 
 const SettingsContext = React.createContext<

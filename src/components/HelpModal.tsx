@@ -30,9 +30,7 @@ function HelpModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Help">
       <div className="help-modal">
-        <p>
-          Guess <strong>two</strong> secret words in <strong>six</strong> guesses.
-        </p>
+        <p>Guess two secret words at once.</p>
         <p>You start with some free clues, and each guess gives you more.</p>
 
         <h2>Example</h2>
@@ -56,10 +54,13 @@ function HelpModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
 
         <Example guess="bean" answer="bean">
           <p>
-            The word was <strong>BEAN</strong>! Now to guess the second one…
+            The word was <strong>BEAN</strong>!
           </p>
         </Example>
-
+        <p>Correct guesses will be replaced with new words.</p>
+        <p>The dashed lines will disappear when they are used.</p>
+        <p>Keep going until you run out of guesses!</p>
+        <br />
         <p>
           Check out the source code and report issues <a href="https://github.com/avisgratis/twords">here</a>.
         </p>

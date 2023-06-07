@@ -4,4 +4,17 @@ button.icon-button {
   margin: 0.25rem;
   padding: 0;
   cursor: pointer;
+  outline: none;
+}
+
+button.icon-button svg {
+  fill: #ccc;
+  background: none;
+  border-radius: 50%;
+}
+
+button.icon-button:focus svg,
+button.icon-button:hover svg {
+  fill: #333;
+  background: #ccc;
 }

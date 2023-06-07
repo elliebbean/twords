@@ -8,20 +8,16 @@ import { useState } from "react";
 import { GameMode } from "services/game";
 
 function App() {
-  const [helpModalOpen, setHelpModalOpen] = useState(false);
+  const [settings, setSettings] = useSettingsStore();
+  const [helpModalOpen, setHelpModalOpen] = useState(!settings.helpViewed);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
 
-  const [settings, setSettings] = useSettingsStore();
+  const closeHelp = () => {
+    setHelpModalOpen(false);
+    setSettings((settings) => ({ ...settings, helpViewed: true }));
+  };
 
-  const searchParams = new URLSearchParams(window.location.search);
   let gameMode: GameMode = "endless";
-  if (searchParams.has("random")) {
-    gameMode = "random";
-  } else if (searchParams.has("endless")) {
-    gameMode = "endless";
-  } else if (searchParams.has("daily")) {
-    gameMode = "daily";
-  }
 
   return (
     <SettingsProvider value={[settings, setSettings]}>
@@ -30,7 +26,7 @@ function App() {
           <Header onHelpButton={() => setHelpModalOpen(true)} onSettingsButton={() => setSettingsModalOpen(true)} />
           <Game mode={gameMode} />
         </div>
-        <HelpModal isOpen={helpModalOpen} onClose={() => setHelpModalOpen(false)} />
+        <HelpModal isOpen={helpModalOpen} onClose={closeHelp} />
         <SettingsModal isOpen={settingsModalOpen} onClose={() => setSettingsModalOpen(false)} />
       </div>
     </SettingsProvider>

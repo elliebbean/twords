@@ -50,6 +50,8 @@ const dailySeed = 0xda7e;
 const endlessSeed = 0xe9d1;
 const randomSeed = 0x5eed;
 
+const firstDailySeed = 19510;
+
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case "letter": {
@@ -252,7 +254,7 @@ export function seedToDate(seed: number): Date {
 
 export function describeSeed(settings: GameSettings) {
   if (settings.daily) {
-    return seedToDate(settings.seed).toLocaleDateString();
+    return "#" + String(settings.seed - firstDailySeed).padStart(3, "0");
   } else {
     return "#" + settings.seed.toString(36);
   }

@@ -34,7 +34,7 @@ const BoardWrapper = styled.div`
   flex: 1 0;
   max-width: 22rem;
 
-  @media (max-width: 500px), (max-height: 850px) {
+  @media (max-width: 575px), (max-height: 850px) {
     max-width: 14rem;
   }
 `;
@@ -121,7 +121,13 @@ function Game(props: GameProps) {
         ))}
       </Boards>
       <p>{message}</p>
-      <StatusBar highScore={highScore} game={state} />
+      <StatusBar
+        highScore={highScore}
+        game={state}
+        newGameAction={() => {
+          dispatch({ type: "restart", settings: generateGameSettings(props.mode) });
+        }}
+      />
       <Keyboard
         fill={selectedBoard}
         onKey={onKey}

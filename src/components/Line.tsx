@@ -29,8 +29,8 @@ const Letter = styled.div<{ color: string; dashed: boolean }>`
   transition: background-color 0.25s ease-in;
   user-select: none;
 
-  @media (max-width: 500px), (max-height: 850px) {
-    font-size: 1.25rem;
+  @media (max-width: 575px), (max-height: 850px) {
+    font-size: 1.5rem;
   }
 `;
 

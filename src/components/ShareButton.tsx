@@ -1,6 +1,6 @@
+import TextButton from "components/TextButton";
 import { useState } from "react";
 import { GameState } from "services/game";
-import "./ShareButton.css";
 
 interface ShareButtonProps {
   game: GameState;
@@ -21,15 +21,13 @@ function ShareButton({ game }: ShareButtonProps) {
   return disabled ? (
     <>Copied to clipboard!</>
   ) : (
-    <button
-      className="share"
-      onClick={(e) => {
-        e.preventDefault();
+    <TextButton
+      onClick={() => {
         share();
       }}
     >
       share
-    </button>
+    </TextButton>
   );
 }
 

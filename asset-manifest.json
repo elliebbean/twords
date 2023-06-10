@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.848e0ddc.css",
+    "main.css": "/static/css/main.95131f07.css",
     "main.js": "/static/js/main.a07eb0af.js",
     "static/media/Geologica-VariableFont_CRSV,SHRP,slnt,wght.ttf": "/static/media/Geologica-VariableFont_CRSV,SHRP,slnt,wght.f3e3fbc9355fd9e0c193.ttf",
     "static/media/settings.svg": "/static/media/settings.1ab89ad0d8c3e292fd6e7ab760f764b8.svg",
     "static/media/close.svg": "/static/media/close.e9da25f98908a03c08d1e3b030fcab50.svg",
     "static/media/help.svg": "/static/media/help.b5c3b68918263dccdea0d63cb353d600.svg",
     "index.html": "/index.html",
-    "main.848e0ddc.css.map": "/static/css/main.848e0ddc.css.map",
+    "main.95131f07.css.map": "/static/css/main.95131f07.css.map",
     "main.a07eb0af.js.map": "/static/js/main.a07eb0af.js.map"
   },
   "entrypoints": [
-    "static/css/main.848e0ddc.css",
+    "static/css/main.95131f07.css",
     "static/js/main.a07eb0af.js"
   ]
 }

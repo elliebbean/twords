@@ -45,11 +45,11 @@ function StatusBar({ game, highScore, newGameAction }: StatusBarProps) {
     return () => {
       clearInterval(timer);
     };
-  }, [game.settings.seed]);
+  });
 
   let timeToNewGameMessage: ReactNode = "";
 
-  if (timeToNewGame <= 0) {
+  if (game.settings.seed < currentDailySeed()) {
     timeToNewGameMessage = <TextButton onClick={newGameAction}>new game available!</TextButton>;
   } else {
     if (game.status === "playing") {
@@ -58,10 +58,8 @@ function StatusBar({ game, highScore, newGameAction }: StatusBarProps) {
       const dateToNewGame = new Date(timeToNewGame);
       if (dateToNewGame.getHours() === 0) {
         timeToNewGameMessage = `(new game in 24 hours)`;
-      } else if (dateToNewGame.getHours() > 2) {
-        timeToNewGameMessage = `(new game in ${dateToNewGame.getHours() - 1} hours)`;
-      } else if (dateToNewGame.getHours() === 2) {
-        timeToNewGameMessage = `(new game in 1 hour)`;
+      } else if (dateToNewGame.getHours() >= 2) {
+        timeToNewGameMessage = `(new game in ${dateToNewGame.getHours()} hours)`;
       } else if (dateToNewGame.getMinutes() === 0) {
         timeToNewGameMessage = `(new game in 60 minutes)`;
       } else if (dateToNewGame.getMinutes() > 2) {

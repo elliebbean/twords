@@ -2,6 +2,7 @@ header {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
   justify-items: center;
+  align-items: center;
   width: 100%;
   min-height: 2.75rem;
   border-bottom: 1px solid #ccc;

@@ -219,8 +219,7 @@ export function loadOrCreateGame(settings: GameSettings): GameState {
 
   if (!savedGame || !savedGame.settings || !savedGame.settings.seed || !savedGame.status) {
     return createGame(settings);
-    //} else if (settings.daily && savedGame.settings.seed === settings.seed) {
-  } else if (settings.daily) {
+  } else if (settings.daily && savedGame.settings.seed === settings.seed) {
     return savedGame;
   } else if (!settings.daily && savedGame.status === "playing") {
     return savedGame;

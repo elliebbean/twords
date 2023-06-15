@@ -1,5 +1,5 @@
 import { CheckedWord } from "services/wordCheck";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 interface LineProps {
   guess: CheckedWord | string;
@@ -7,7 +7,16 @@ interface LineProps {
   showResults?: boolean;
   failure?: boolean;
   fragile?: boolean;
+  error?: boolean;
 }
+
+const shakeAnimation = keyframes`
+  0% {left: 0}
+  25% {left: 5px}
+  50% {left: 0}
+  75% {left: -5px}
+  100% {left: 0}
+`;
 
 const LineContiner = styled.div`
   display: flex;
@@ -15,7 +24,7 @@ const LineContiner = styled.div`
   gap: 4px;
 `;
 
-const Letter = styled.div<{ color: string; dashed: boolean }>`
+const Letter = styled.div<{ color: string; dashed: boolean; error: boolean }>`
   background-color: ${(props) => props.color};
   display: inline-flex;
   flex: 1 1;
@@ -28,6 +37,11 @@ const Letter = styled.div<{ color: string; dashed: boolean }>`
   font-weight: bold;
   transition: background-color 0.25s ease-in;
   user-select: none;
+  position: relative;
+  animation-name: ${(props) => (props.error ? shakeAnimation : "none")};
+  animation-duration: 0.2s;
+  animation-iteration-count: 3;
+  animation-timing-function: ease;
 
   @media (max-width: 575px), (max-height: 850px) {
     font-size: 1.5rem;
@@ -35,7 +49,7 @@ const Letter = styled.div<{ color: string; dashed: boolean }>`
 `;
 
 function Line(props: LineProps) {
-  const { guess, length, showResults, failure, fragile } = props;
+  const { guess, length, showResults, failure, fragile, error } = props;
 
   const letters = [...Array(length)].map((_, i) => {
     let guessLetter = "";
@@ -58,7 +72,7 @@ function Line(props: LineProps) {
     }
 
     return (
-      <Letter color={color} dashed={fragile ?? false} key={i}>
+      <Letter color={color} dashed={fragile ?? false} key={i} error={error ?? false}>
         {guessLetter}
       </Letter>
     );

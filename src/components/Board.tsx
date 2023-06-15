@@ -7,6 +7,7 @@ interface BoardProps {
   currentGuess: string;
   selected?: boolean;
   gameStatus?: GameStatus;
+  error?: boolean;
 }
 
 const BoardDiv = styled.div<{ selected?: boolean }>`
@@ -18,7 +19,7 @@ const BoardDiv = styled.div<{ selected?: boolean }>`
   opacity: ${({ selected }) => (selected !== undefined && !selected ? "0.5" : "1")};
 `;
 
-function Board({ board, currentGuess, selected, gameStatus }: BoardProps) {
+function Board({ board, currentGuess, selected, gameStatus, error }: BoardProps) {
   const { answer, status: boardStatus, guessLimit, minimumGuessLimit, previousGuesses } = board;
   const lines = previousGuesses.map((guess, i) => <Line key={i} guess={guess} length={answer.length} showResults />);
 
@@ -31,6 +32,7 @@ function Board({ board, currentGuess, selected, gameStatus }: BoardProps) {
         guess={currentGuess}
         length={answer.length}
         fragile={lines.length >= minimumGuessLimit}
+        error={error}
       />
     );
   }

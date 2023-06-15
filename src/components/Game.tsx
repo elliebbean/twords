@@ -120,6 +120,7 @@ function Game(props: GameProps) {
               selected={selectedBoard === undefined ? undefined : selectedBoard === side}
               key={side}
               gameStatus={state.status}
+              error={error !== undefined}
             />
           </BoardWrapper>
         ))}

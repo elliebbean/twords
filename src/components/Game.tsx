@@ -39,11 +39,23 @@ const BoardWrapper = styled.div`
   }
 `;
 
+const Error = styled.div<{ show: boolean }>`
+  margin: auto;
+  background-color: #cccccc;
+  color: #202027;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  opacity: ${(props) => (props.show ? 1 : 0)};
+  transition: opacity 0.3s ease;
+  font-size: 1.1em;
+`;
+
 function Game(props: GameProps) {
   const [hoveredBoard, setHoveredBoard] = useState<"left" | "right" | undefined>();
   const [clickedBoard, setClickedBoard] = useState<"left" | "right" | undefined>();
   const [state, dispatch] = useReducer(gameReducer, generateGameSettings(props.mode), loadOrCreateGame);
-  const [error, setError] = useState<string | undefined>();
+  const [error, setError] = useState("");
+  const [showError, setShowError] = useState(false);
   const [highScore, setHighScore] = useStoredState<number>(`high-score-${props.mode}`, 0);
 
   const selectedBoard = clickedBoard ?? hoveredBoard;
@@ -89,14 +101,15 @@ function Game(props: GameProps) {
   }, [onKey]);
 
   useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => setError(undefined), 2000);
+    if (showError) {
+      const timer = setTimeout(() => setShowError(false), 2000);
       return () => clearTimeout(timer);
     }
-  }, [error]);
+  }, [showError]);
 
   if (state.error) {
     setError(state.error);
+    setShowError(true);
     dispatch({ type: "clearError" });
   }
 
@@ -120,12 +133,12 @@ function Game(props: GameProps) {
               selected={selectedBoard === undefined ? undefined : selectedBoard === side}
               key={side}
               gameStatus={state.status}
-              error={error !== undefined}
+              error={showError}
             />
           </BoardWrapper>
         ))}
       </Boards>
-      {error && <p>{error}</p>}
+      {<Error show={showError}>{error}</Error>}
       <StatusBar
         highScore={highScore}
         game={state}

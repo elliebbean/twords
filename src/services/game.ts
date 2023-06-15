@@ -118,7 +118,7 @@ function submit(state: GameState): GameState {
   if (!validWords[state.currentGuess.length]?.includes(state.currentGuess)) {
     return {
       ...state,
-      error: "Invalid guess",
+      error: "Unknown word",
     };
   }
 

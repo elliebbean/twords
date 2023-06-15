@@ -43,6 +43,7 @@ function Game(props: GameProps) {
   const [hoveredBoard, setHoveredBoard] = useState<"left" | "right" | undefined>();
   const [clickedBoard, setClickedBoard] = useState<"left" | "right" | undefined>();
   const [state, dispatch] = useReducer(gameReducer, generateGameSettings(props.mode), loadOrCreateGame);
+  const [error, setError] = useState<string | undefined>();
   const [highScore, setHighScore] = useStoredState<number>(`high-score-${props.mode}`, 0);
 
   const selectedBoard = clickedBoard ?? hoveredBoard;
@@ -87,13 +88,16 @@ function Game(props: GameProps) {
     };
   }, [onKey]);
 
-  let message;
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(undefined), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   if (state.error) {
-    message = state.error;
-  } else if (state.status === "won") {
-    message = "Congratulations, you won!" + (props.mode === "random" ? " Press enter to play again." : "");
-  } else if (state.status === "lost") {
-    message = "Sorry, you lost." + (props.mode === "random" ? " Press enter to play again." : "");
+    setError(state.error);
+    dispatch({ type: "clearError" });
   }
 
   return (
@@ -120,7 +124,7 @@ function Game(props: GameProps) {
           </BoardWrapper>
         ))}
       </Boards>
-      <p>{message}</p>
+      {error && <p>{error}</p>}
       <StatusBar
         highScore={highScore}
         game={state}

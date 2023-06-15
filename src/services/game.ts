@@ -39,6 +39,7 @@ export type GameAction =
   | { type: "letter"; letter: string }
   | { type: "backspace" }
   | { type: "submit" }
+  | { type: "clearError" }
   | { type: "restart"; settings: GameSettings };
 
 const validWords: { [index: number]: string[] | undefined } = _validWords;
@@ -83,6 +84,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case "submit": {
       return submit(state);
+    }
+
+    case "clearError": {
+      return {
+        ...state,
+        error: null,
+      };
     }
 
     case "restart": {

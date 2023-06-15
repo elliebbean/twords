@@ -36,6 +36,7 @@ const currentTimeToNewGame = () => {
 
 function StatusBar({ game, highScore, newGameAction }: StatusBarProps) {
   const [timeToNewGame, setTimeToNewGame] = useState(currentTimeToNewGame());
+  const [newHighScore, setNewHighScore] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -46,6 +47,12 @@ function StatusBar({ game, highScore, newGameAction }: StatusBarProps) {
       clearInterval(timer);
     };
   });
+
+  if (game.score > highScore && !newHighScore) {
+    setNewHighScore(true);
+  } else if (game.score === 0 && newHighScore) {
+    setNewHighScore(false);
+  }
 
   let timeToNewGameMessage: ReactNode = "";
 
@@ -79,11 +86,11 @@ function StatusBar({ game, highScore, newGameAction }: StatusBarProps) {
       </StatusBarItem>
       {game.settings.endless && (
         <StatusBarItem2>
-          Score: {game.score} (Highest: {highScore})
+          Score: {game.score} ({newHighScore ? <>New high score!</> : <>Highest: {highScore}</>})
           {game.status !== "playing" && (
             <>
               {" "}
-              - <ShareButton game={game} />
+              - <ShareButton game={game} newHighScore={newHighScore} />
             </>
           )}
         </StatusBarItem2>

@@ -176,7 +176,7 @@ function submit(state: GameState): GameState {
 
 // How likely we are to pick a word of different lengths
 const wordLengthProbabilities: { [index: number]: number | undefined } = {
-  5: 1.25,
+  5: 4,
   6: 1,
 };
 
